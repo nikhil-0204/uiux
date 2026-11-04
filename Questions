@@ -1,0 +1,150 @@
+Q1. What is UI?
+Answer: UI stands for User Interface. It includes the visual elements of an application, such as buttons, colors, icons, images, and layouts.
+Q2. What is UX?
+Answer: UX stands for User Experience. It focuses on how easily and effectively users can interact with a product.
+Q3. What is the difference between UI and UX?
+Answer: UI focuses on the appearance of a product, whereas UX focuses on the overall experience and usability of the product.
+Q4. What is Figma?
+Answer: Figma is a cloud-based design tool used to create user interfaces, wireframes, prototypes, and interactive designs.
+Q5. What is a wireframe?
+Answer: A wireframe is a basic visual layout of a website or application. It shows the placement of elements without focusing on detailed colors or styling.
+Q6. What is a prototype?
+Answer: A prototype is an interactive model of an application that demonstrates how users can navigate between screens and interact with elements.
+Q7. What is the difference between a wireframe and a prototype?
+Answer: A wireframe shows the structure of a design, while a prototype demonstrates how the design works through interactions.
+Q8. What is a user persona?
+Answer: A user persona is a fictional representation of a target user based on research, including their goals, needs, behaviors, and challenges.
+Q9. Why do we create user personas?
+Answer: We create user personas to understand users' needs and design products that are useful, user-friendly, and effective.
+Q10. What is usability?
+Answer: Usability refers to how easily users can learn, understand, and use an application to achieve their goals.
+Q11. What is a user flow?
+Answer: A user flow is the sequence of steps a user follows to complete a task in an application.
+Q12. What is the purpose of the Figma Prototype feature?
+Answer: The Prototype feature connects different screens and adds interactions, such as button clicks and navigation, to simulate application behavior.
+2. User Persona Design
+Q13. What are the main components of a user persona?
+Answer: The main components are name, age, occupation, goals, needs, behaviors, frustrations, and technical skills.
+Q14. How do you create a user persona?
+Answer: First, I identify the target audience. Then I gather user information, identify common needs and behaviors, and create a persona representing the target users.
+Q15. What is the purpose of a user persona?
+Answer: Its purpose is to help designers understand their target audience and make better design decisions.
+Q16. What is a target audience?
+Answer: A target audience is the specific group of people for whom a product or application is designed.
+Q17. Give an example of a user persona for an online learning platform.
+Answer: My persona is Rahul, a 21-year-old college student who wants affordable courses, video lectures, quizzes, and progress tracking to improve his skills.
+Q18. What is the difference between a user persona and a user profile?
+Answer: A user persona represents a typical group of target users, whereas a user profile generally describes an individual user's information.
+Q19. How does a user persona improve UI/UX design?
+Answer: It helps designers understand user expectations, identify problems, prioritize features, and create a user-friendly interface.
+3. Online Learning Platform
+Q20. What is an online learning platform?
+Answer: An online learning platform is an application or website that allows users to learn through online courses, video lectures, quizzes, and other educational resources.
+Q21. What are the main features of your online learning platform?
+Answer: The main features are course listings, video lectures, quizzes, progress tracking, user profiles, and course search.
+Q22. What is the purpose of course listings?
+Answer: Course listings help users browse available courses and select courses based on their interests and requirements.
+Q23. Why do we include video lectures?
+Answer: Video lectures help users understand concepts visually and learn at their own pace.
+Q24. What is progress tracking?
+Answer: Progress tracking shows how much of a course a user has completed, including completed lessons, quiz scores, and remaining content.
+Q25. Why are quizzes important in an online learning platform?
+Answer: Quizzes help users test their knowledge, evaluate their understanding, and identify areas that need improvement.
+Q26. How would you design the home screen of an online learning platform?
+Answer: I would include a navigation bar, search bar, course categories, recommended courses, enrolled courses, and a progress section.
+Q27. How can you improve the user experience of an online learning platform?
+Answer: I can improve the experience through simple navigation, clear course information, responsive layouts, easy video controls, and visible progress indicators.
+4. Social Fitness App
+Q28. What is a social fitness app?
+Answer: A social fitness app allows users to track their workouts, set fitness goals, connect with friends, and share their fitness achievements.
+Q29. What are the main features of your social fitness app?
+Answer: The main features are workout tracking, exercise logging, goal setting, friend connections, activity feeds, and progress sharing.
+Q30. What is workout tracking?
+Answer: Workout tracking records physical activities such as running, walking, weightlifting, and cycling, along with details like duration, distance, or repetitions.
+Q31. Why do we include goal setting?
+Answer: Goal setting helps users define fitness targets, stay motivated, and monitor their progress toward achieving those targets.
+Q32. Why are social features important in a fitness app?
+Answer: Social features encourage users through friendly competition, shared achievements, community support, and motivation from friends.
+Q33. How can users log their exercises?
+Answer: Users can select an exercise, enter details such as duration, sets, repetitions, or weight, and save the workout.
+Q34. How would you design the home screen of a social fitness app?
+Answer: I would include a workout summary, daily goals, progress charts, friends' activities, a workout button, and a navigation bar.
+Q35. What is the importance of a prototype in a fitness app?
+Answer: A prototype helps demonstrate navigation between screens, workout logging, goal setting, and social interactions before development.
+5. Product Packaging and Poster/Flyer Mockups
+Q36. What is product packaging design?
+Answer: Product packaging design involves creating the visual appearance and layout of packaging, including colors, logos, product information, and graphics.
+Q37. What is a mockup?
+Answer: A mockup is a visual representation of how a design will look in a realistic environment or on a physical product.
+Q38. Why do we use mockups?
+Answer: Mockups help visualize the final design, present ideas professionally, and identify design improvements before production.
+Q39. What are the main elements of packaging design?
+Answer: The main elements are product name, logo, colors, typography, images, product information, and layout.
+Q40. What is the importance of color in packaging design?
+Answer: Colors attract customers, communicate the product's identity, create visual appeal, and help differentiate the product from competitors.
+Q41. What is a logo?
+Answer: A logo is a visual symbol or design that identifies and represents a brand or company.
+Q42. What is a poster or flyer mockup?
+Answer: A poster or flyer mockup shows how a promotional design would look in a real-world setting, such as on a wall, notice board, or display.
+Q43. Why should packaging be shown from different angles?
+Answer: Different angles help viewers understand the complete design, including the front, back, sides, and overall appearance of the package.
+Q44. What is typography?
+Answer: Typography is the style, arrangement, size, and appearance of text used in a design to improve readability and visual appeal.
+6. Recipe Finder Application Using Figma
+Q45. What is a recipe finder application?
+Answer: A recipe finder application helps users discover recipes based on ingredients, food categories, cooking preferences, and dietary restrictions.
+Q46. What are the main features of your recipe finder application?
+Answer: The main features are recipe search, ingredient filters, categories, recipe details, cooking instructions, favorites, and dietary filters.
+Q47. How can users search for recipes?
+Answer: Users can enter a recipe name or available ingredients in the search bar and apply filters to find suitable recipes.
+Q48. What are dietary restrictions?
+Answer: Dietary restrictions are food-related limitations or preferences, such as vegetarian, vegan, gluten-free, or dairy-free diets.
+Q49. Why do we include a favorites feature?
+Answer: The favorites feature allows users to save recipes they like and access them quickly in the future.
+Q50. How would you design the home screen of a recipe finder application?
+Answer: I would include a search bar, food categories, popular recipes, ingredient filters, recipe cards, and a favorites section.
+7. Additional Important Figma Questions
+These questions are also commonly useful for a practical viva.
+Q51. What is a frame in Figma?
+Answer: A frame is a container used to organize design elements and represent screens, pages, or sections of an interface.
+Q52. What are components in Figma?
+Answer: Components are reusable design elements, such as buttons, navigation bars, and cards, that maintain consistency across screens.
+Q53. What are variants in Figma?
+Answer: Variants are different versions of the same component, such as a button in default, hover, active, or disabled states.
+Q54. What is Auto Layout?
+Answer: Auto Layout automatically adjusts the spacing, alignment, and arrangement of elements when content or dimensions change.
+Q55. What are constraints in Figma?
+Answer: Constraints define how an element behaves when its parent frame changes size.
+Q56. What is responsive design?
+Answer: Responsive design ensures that an interface adapts to different screen sizes, such as mobile phones, tablets, and desktops.
+Q57. What is the difference between a component and an instance?
+Answer: A component is the main reusable element, while an instance is a copy of that component used elsewhere in the design.
+Q58. How do you create a clickable button in Figma?
+Answer: I select the button, open the Prototype tab, connect it to the destination frame, choose an interaction such as On Click, and select an action such as Navigate To.
+Q59. How do you share your Figma design?
+Answer: I click the Share button, configure the appropriate access permissions, and share the design link with others.
+Q60. What is the difference between UI design and graphic design?
+Answer: UI design focuses on interactive digital interfaces, while graphic design focuses on visual communication through elements such as posters, logos, advertisements, and packaging.
+8. Practical Viva Questions: Examiner May Ask You to Demonstrate
+Question
+Short Answer
+1. Which tool did you use?
+I used Figma for interface design, wireframing, and prototyping.
+2. Why did you select this project?
+I selected it to solve a specific user problem through a simple and effective design.
+3. What is the first step in UI/UX design?
+The first step is understanding the problem, target users, and their requirements.
+4. How did you choose the colors?
+I selected colors based on the application's purpose, readability, and visual consistency.
+5. How did you make the design user-friendly?
+I used clear navigation, readable text, consistent components, and a simple layout.
+6. How did you test your prototype?
+I tested navigation, buttons, interactions, and the overall user flow.
+7. What challenges did you face?
+I faced challenges in arranging elements, maintaining consistency, and designing an intuitive user flow.
+8. How did you overcome those challenges?
+I used frames, components, Auto Layout, and prototype testing to improve the design.
+9. What improvements would you make?
+I would conduct user testing, collect feedback, and improve usability based on the results.
+10. What did you learn from this project?
+I learned how to understand user needs, create wireframes, design interfaces, and build interactive prototypes.
