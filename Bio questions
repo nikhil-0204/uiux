@@ -1,0 +1,288 @@
+1. DNA Sequence Analysis
+Q1. What is bioinformatics?
+Answer: Bioinformatics is the application of computer science, mathematics, and biology to analyze biological data such as DNA, RNA, and protein sequences.
+Q2. What is DNA?
+Answer: DNA stands for Deoxyribonucleic Acid. It carries the genetic information of living organisms.
+Q3. What are the four nitrogenous bases in DNA?
+Answer: The four bases are Adenine (A), Thymine (T), Guanine (G), and Cytosine (C).
+Q4. What is a DNA sequence?
+Answer: A DNA sequence is the specific order of nucleotides represented by the letters A, T, G, and C.
+Q5. What is a motif in DNA?
+Answer: A motif is a short, recurring sequence pattern that may have a biological function, such as a transcription factor binding site.
+Q6. What is GC content?
+Answer: GC content is the percentage of guanine and cytosine bases in a DNA sequence.
+Q7. How do you calculate GC content?
+Answer: We use the formula:
+GC Content = (Number of G + Number of C) / Total Number of Bases × 100
+For example, if a DNA sequence has 100 bases and 40 are G or C, its GC content is 40%.
+Q8. What is a coding region?
+Answer: A coding region is a part of DNA that contains information used to produce a protein.
+Q9. What is an ORF?
+Answer: ORF stands for Open Reading Frame. It is a sequence of DNA that starts with a start codon and continues until a stop codon in the same reading frame.
+Q10. What are start and stop codons?
+Answer: The start codon is usually ATG in DNA. The stop codons are TAA, TAG, and TGA.
+Q11. What is the complementary DNA strand?
+Answer: The complementary strand is formed according to base-pairing rules: A pairs with T, and G pairs with C.
+Example:
+Original: ATGC
+Complement: TACG
+Q12. Which tools can be used for DNA sequence analysis?
+Answer: Tools include BLAST, EMBOSS, BioEdit, and Biopython.
+Q13. What is BLAST?
+Answer: BLAST stands for Basic Local Alignment Search Tool. It compares a DNA or protein sequence against a database to identify similar sequences.
+Q14. What is the purpose of DNA sequence analysis?
+Answer: It helps identify motifs, calculate GC content, find coding regions, and understand the possible biological function of a sequence.
+Q15. What is the importance of GC content?
+Answer: GC content helps characterize a DNA sequence and can provide information about its composition and stability.
+2. RNA-Seq Data Analysis
+Q16. What is RNA sequencing?
+Answer: RNA-Seq is a high-throughput sequencing technique used to study RNA and measure gene expression levels.
+Q17. What is gene expression?
+Answer: Gene expression is the process by which information from a gene is used to produce a functional product, such as RNA or protein.
+Q18. What is differential gene expression analysis?
+Answer: It identifies genes whose expression levels differ significantly between two or more experimental conditions.
+For example, comparing gene expression in healthy and diseased tissues.
+Q19. What is an RNA-Seq dataset?
+Answer: It is a collection of sequencing reads generated from RNA samples that can be analyzed to study gene expression.
+Q20. What is a differentially expressed gene?
+Answer: A differentially expressed gene is a gene whose expression changes significantly between experimental conditions.
+Q21. What is upregulation?
+Answer: Upregulation means a gene is expressed at a higher level in one condition than in the comparison condition.
+Q22. What is downregulation?
+Answer: Downregulation means a gene is expressed at a lower level in one condition than in the comparison condition.
+Q23. What is log2 fold change?
+Answer: Log2 fold change measures the magnitude and direction of change in gene expression between two conditions.
+Positive value: higher expression in the tested condition.
+Negative value: lower expression in the tested condition.
+Zero: equal expression.
+Q24. What is a p-value?
+Answer: A p-value measures how compatible the observed data are with the null hypothesis under a statistical model.
+Q25. What is an adjusted p-value?
+Answer: An adjusted p-value accounts for multiple statistical tests and helps control false-positive findings.
+Q26. What is FDR?
+Answer: FDR stands for False Discovery Rate. It estimates the proportion of false positives among the results declared significant.
+Q27. What is normalization in RNA-Seq?
+Answer: Normalization adjusts for differences in sequencing depth and other technical factors so that gene expression can be compared more fairly between samples.
+Q28. Which tools are used for RNA-Seq analysis?
+Answer: Common tools include:
+FastQC for quality control.
+HISAT2 or STAR for read alignment.
+featureCounts for counting reads.
+DESeq2 or edgeR for differential expression analysis.
+DAVID or Enrichr for functional enrichment analysis.
+Q29. What is functional annotation?
+Answer: Functional annotation assigns biological information to genes, such as their functions, pathways, and associated biological processes.
+Q30. What is Gene Ontology (GO)?
+Answer: Gene Ontology is a system used to classify genes according to biological processes, molecular functions, and cellular components.
+Q31. What is pathway analysis?
+Answer: Pathway analysis identifies biological pathways that are associated with a set of genes, helping researchers understand the biological processes involved.
+Q32. Why are biological replicates important?
+Answer: Biological replicates help estimate biological variability and improve the reliability of statistical comparisons.
+Q33. What is a volcano plot?
+Answer: A volcano plot displays the statistical significance and magnitude of gene expression changes. It commonly uses log2 fold change on the x-axis and negative log10 adjusted p-value on the y-axis.
+Q34. What is the purpose of RNA-Seq analysis?
+Answer: It helps identify genes that change their expression under different conditions and provides insights into biological processes and diseases.
+3. Protein Structure Prediction
+Q35. What is a protein?
+Answer: A protein is a biological molecule made of amino acids that performs functions such as catalysis, transport, signaling, and structural support.
+Q36. What are the 20 standard amino acids?
+Answer: They are the 20 standard amino acids commonly used to build proteins. Each has a specific chemical structure and properties.
+Q37. What are the four levels of protein structure?
+Answer:
+Primary: Amino acid sequence.
+Secondary: Alpha helices and beta sheets.
+Tertiary: Overall three-dimensional structure of one polypeptide chain.
+Quaternary: Arrangement of multiple polypeptide chains.
+Q38. What is protein structure prediction?
+Answer: Protein structure prediction is the process of estimating a protein's three-dimensional structure from its amino acid sequence.
+Q39. What is homology modeling?
+Answer: Homology modeling predicts a protein's structure using the known structure of a related protein as a template.
+Q40. What is threading?
+Answer: Threading predicts a protein structure by fitting its sequence onto known structural folds, even when sequence similarity is low.
+Q41. What is a template in homology modeling?
+Answer: A template is a protein with a known three-dimensional structure that is used as a reference to model the target protein.
+Q42. What is the target sequence?
+Answer: The target sequence is the amino acid sequence whose three-dimensional structure we want to predict.
+Q43. What is sequence alignment?
+Answer: Sequence alignment arranges DNA, RNA, or protein sequences to identify similarities and differences between them.
+Q44. What is the purpose of protein structure prediction?
+Answer: It helps us understand protein function, identify possible binding sites, study interactions, and support drug discovery.
+Q45. Which tools are used for protein structure prediction?
+Answer: Common tools include SWISS-MODEL, Phyre2, I-TASSER, and AlphaFold.
+Q46. What is AlphaFold?
+Answer: AlphaFold is an artificial intelligence system that predicts protein structures from amino acid sequences.
+Q47. What is a PDB file?
+Answer: PDB stands for Protein Data Bank. A PDB file contains information about the three-dimensional coordinates of atoms in a protein or other biological structure.
+Q48. What is a Ramachandran plot?
+Answer: A Ramachandran plot shows the allowed combinations of backbone phi and psi angles in a protein and helps assess its structural geometry.
+Q49. What is RMSD?
+Answer: RMSD stands for Root Mean Square Deviation. It measures the average positional difference between corresponding atoms in two aligned structures.
+Q50. Can protein structure determine protein function?
+Answer: Protein structure provides important clues about function, but additional experimental or computational evidence may be required to confirm it.
+Q51. What is the difference between homology modeling and threading?
+Answer: Homology modeling generally uses a related protein with detectable sequence similarity, whereas threading can identify compatible structural folds even when sequence similarity is low.
+Q52. What is the advantage of protein structure prediction?
+Answer: It can help researchers investigate protein function and interactions without requiring an experimentally determined structure first.
+4. Molecular Docking and Virtual Screening
+Q53. What is molecular docking?
+Answer: Molecular docking is a computational method used to predict how a small molecule, called a ligand, binds to a target protein.
+Q54. What is a ligand?
+Answer: A ligand is a molecule that binds to a protein or another biological target.
+Q55. What is a protein target?
+Answer: A protein target is a biological molecule selected for studying interactions with potential drug compounds.
+Q56. What is a binding site?
+Answer: A binding site is the region of a protein where a ligand can bind.
+Q57. What is binding affinity?
+Answer: Binding affinity describes how strongly a ligand binds to its target protein.
+Q58. What is a docking score?
+Answer: A docking score is a computational estimate used to rank predicted ligand-binding poses. Its meaning and scale depend on the docking software.
+Q59. What is the difference between molecular docking and virtual screening?
+Answer: Molecular docking predicts how an individual ligand binds to a target, while virtual screening evaluates many compounds to identify promising candidates.
+Q60. What is a binding pose?
+Answer: A binding pose is the predicted position and orientation of a ligand inside or near a protein's binding site.
+Q61. What are hydrogen bonds?
+Answer: Hydrogen bonds are non-covalent interactions that can help stabilize ligand binding to a protein.
+Q62. What are hydrophobic interactions?
+Answer: Hydrophobic interactions occur when nonpolar regions of molecules tend to associate in an aqueous environment. They can contribute to protein-ligand binding.
+Q63. What is AutoDock Vina?
+Answer: AutoDock Vina is a molecular docking program used to predict ligand-binding poses and calculate approximate docking scores.
+Q64. What is PyMOL?
+Answer: PyMOL is a molecular visualization tool used to display and analyze protein structures and protein-ligand interactions.
+Q65. What is Discovery Studio Visualizer?
+Answer: It is a molecular visualization tool used to examine protein structures, ligands, and their interactions.
+Q66. What is virtual screening?
+Answer: Virtual screening is a computational approach used to search large chemical libraries for compounds that may interact with a biological target.
+Q67. What is a lead compound?
+Answer: A lead compound is a molecule that shows promising activity or properties and can be further optimized during drug development.
+Q68. What is the difference between a ligand and a drug?
+Answer: A ligand is any molecule that binds to a target, whereas a drug is a substance developed or used to prevent, diagnose, or treat a disease.
+Q69. Does a better docking score guarantee that a compound is an effective drug?
+Answer: No. Docking scores are predictions and do not prove biological activity, safety, or effectiveness. Experimental validation is required.
+Q70. Why is protein preparation necessary before docking?
+Answer: Protein preparation helps ensure that the structure, protonation states, charges, and relevant atoms are suitable for docking calculations.
+Q71. What is a grid box in molecular docking?
+Answer: A grid box defines the region of space in which the docking program searches for ligand-binding poses.
+Q72. What is the purpose of virtual screening in drug discovery?
+Answer: It reduces the number of compounds that need experimental testing by prioritizing molecules that appear promising computationally.
+Q73. What is the difference between a binding pose and a docking score?
+Answer: A binding pose describes where and how the ligand binds, while the docking score estimates the favorability of that predicted interaction.
+Q74. What are the limitations of molecular docking?
+Answer: Docking may not accurately represent protein flexibility, solvent effects, binding kinetics, or the full biological environment. Its predictions need further validation.
+5. General Bioinformatics Viva Questions
+These questions are also important because examiners often ask them across all four practicals.
+Q75. What is a biological database?
+Answer: A biological database stores biological information such as DNA sequences, protein sequences, structures, and gene annotations.
+Q76. What is NCBI?
+Answer: NCBI stands for National Center for Biotechnology Information. It provides biological databases and tools for analyzing biological data.
+Q77. What is FASTA format?
+Answer: FASTA is a text-based format used to represent DNA, RNA, or protein sequences. A sequence begins with a header line starting with the > symbol.
+Example:
+>Sample_DNA
+ATGCGTACGTAG
+Q78. What is the difference between DNA and RNA?
+Answer: DNA contains deoxyribose sugar and usually uses thymine, while RNA contains ribose sugar and uses uracil instead of thymine.
+Q79. What is sequence alignment used for?
+Answer: Sequence alignment is used to identify similarities between sequences and can help reveal evolutionary relationships or possible functional similarities.
+Q80. What is the difference between primary and secondary databases?
+Answer: Primary databases store experimentally derived data, while secondary databases contain information derived through analysis or interpretation of primary data.
+Q81. What is computational biology?
+Answer: Computational biology uses computational and mathematical methods to study biological systems and solve biological problems.
+Q82. What is an in-silico experiment?
+Answer: An in-silico experiment is an experiment performed using computer-based simulations or computational analysis rather than directly in a laboratory.
+Q83. What is the difference between in-vitro, in-vivo, and in-silico?
+Answer:
+In-vitro: Performed outside a living organism, such as in a test tube.
+In-vivo: Performed within a living organism.
+In-silico: Performed using computational methods.
+Q84. Why is bioinformatics important?
+Answer: Bioinformatics helps analyze large biological datasets efficiently and supports research in genetics, disease studies, biotechnology, and drug discovery.
+Q85. What are the major applications of bioinformatics?
+Answer: Major applications include genome analysis, gene expression analysis, protein structure prediction, evolutionary studies, personalized medicine, and drug discovery.
+6. Important Practical-Based Questions
+These questions focus on what you actually do during each practical.
+Practical
+Viva question
+Short answer
+DNA Analysis
+What is the main objective?
+To analyze a DNA sequence, identify motifs, calculate GC content, and find possible coding regions.
+DNA Analysis
+What result do you obtain?
+Sequence composition, motif locations, GC percentage, and possible ORFs.
+RNA-Seq
+What is the main objective?
+To identify genes with significantly different expression between conditions.
+RNA-Seq
+What is the final output?
+A list of differentially expressed genes with statistical results and functional annotations.
+Protein Prediction
+What is the main objective?
+To predict a protein's three-dimensional structure from its sequence.
+Protein Prediction
+What is the final output?
+A predicted structure and an assessment of its quality and possible function.
+Molecular Docking
+What is the main objective?
+To predict ligand-binding poses and estimate binding scores.
+Virtual Screening
+What is the final output?
+A ranked list of potential compounds for further investigation.
+7. Most Important Differences to Remember
+These differences are frequently asked in viva examinations.
+1. DNA vs RNA
+DNA
+RNA
+Deoxyribose sugar
+Ribose sugar
+Contains thymine
+Contains uracil
+Usually double-stranded
+Usually single-stranded
+Stores genetic information
+Functions in gene expression and other biological processes
+2. Homology Modeling vs Threading
+Homology Modeling
+Threading
+Uses a related protein structure as a template
+Fits a sequence to known structural folds
+Usually relies on detectable sequence similarity
+Can work when sequence similarity is low
+Predicts structure based on evolutionary relationships
+Evaluates compatibility with existing folds
+3. Molecular Docking vs Virtual Screening
+Molecular Docking
+Virtual Screening
+Predicts the binding pose of a ligand
+Evaluates many compounds
+Estimates ligand-binding scores
+Ranks potential candidates
+Can study individual compounds
+Helps prioritize compounds for further testing
+4. Upregulation vs Downregulation
+Upregulation
+Downregulation
+Gene expression increases
+Gene expression decreases
+Positive log2 fold change in the stated comparison
+Negative log2 fold change in the stated comparison
+5. Primary vs Secondary Protein Structure
+Primary Structure
+Secondary Structure
+Linear sequence of amino acids
+Local structural patterns
+Describes amino acid order
+Includes alpha helices and beta sheets
+8. Four Assignment Questions You Should Be Able to Answer
+The examiner may ask you to explain your practical in your own words. Prepare these answers.
+Q86. Explain your DNA sequence analysis practical.
+Answer:
+The objective of this practical is to analyze a DNA sequence. First, I obtain the sequence and examine its nucleotide composition. Then, I identify specific motifs, calculate GC content, and search for open reading frames. Finally, I summarize the results to understand the sequence's possible biological significance.
+Q87. Explain your RNA-Seq data analysis practical.
+Answer:
+The objective is to identify differentially expressed genes between experimental conditions. First, I perform quality control and process the sequencing data. Then, I quantify gene expression, normalize the data, and perform statistical analysis. Finally, I identify significant genes and study their biological functions using functional annotation and pathway analysis.
+Q88. Explain your protein structure prediction practical.
+Answer:
+The objective is to predict the three-dimensional structure of a protein from its amino acid sequence. I use a suitable prediction method, such as homology modeling or threading. After obtaining the predicted structure, I assess its quality and investigate its possible function and interactions.
+Q89. Explain your molecular docking and virtual screening practical.
+Answer:
+The objective is to predict the interaction between a protein target and small molecules. First, I prepare the protein and ligand structures. Then, I perform molecular docking to predict binding poses and calculate docking scores. During virtual screening, I compare multiple compounds and prioritize promising candidates for further investigation.
