@@ -1,0 +1,350 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+df = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\Winedataset.csv")
+
+X = df.drop('class', axis=1)
+y = df['class']
+
+# Feature Scaling
+X = StandardScaler().fit_transform(X)
+
+# PCA Transformation
+pca = PCA()
+X_pca = pca.fit_transform(X)
+
+# Explained Variance
+plt.plot(pca.explained_variance_ratio_.cumsum(), marker='o')
+plt.xlabel("Principal Components")
+plt.ylabel("Cumulative Explained Variance")
+plt.title("Explained Variance")
+plt.show()
+
+# Reduce to 2 components for visualization
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+# Visualization
+for i in sorted(y.unique()):
+    plt.scatter(X_pca[y == i, 0], X_pca[y == i, 1], label=f"Class {i}")
+
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("PCA Visualization")
+plt.legend()
+plt.show()
+
+print("Explained Variance:", pca.explained_variance_ratio_.sum())
+
+
+
+
+
+
+
+
+
+
+# **Feature Transformation Using PCA – Dimensionality Reduction**
+
+**Problem Statement:** Apply the Principal Component Analysis (PCA) algorithm to a wine dataset to reduce the number of features while preserving maximum information. Use principal components to visualize and distinguish between different wine classes.
+
+**Objective:** To reduce the dimensionality of wine data using PCA and visualize the data in two dimensions.
+
+Your code performs PCA transformation and creates two graphs to understand how much information is preserved.
+
+## **1. Import libraries**
+
+```
+import pandas as pdimport matplotlib.pyplot as pltfrom sklearn.preprocessing import StandardScalerfrom sklearn.decomposition import PCA
+```
+
+- `Pandas`: Used to load and manipulate the dataset.
+- `Matplotlib`: Used to create graphs.
+- `StandardScaler`: Used to standardize numerical features.
+- `PCA`: Used to perform Principal Component Analysis.
+
+## **2. Load dataset**
+
+```
+df = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\Winedataset.csv")
+```
+
+- `read_csv()` loads the wine dataset.
+- `df` stores the dataset.
+- `r` before the file path indicates a raw string, so backslashes are handled correctly.
+
+## **3. Separate features and target**
+
+```
+X = df.drop('class', axis=1)y = df['class']
+```
+
+The dataset is divided into two parts:
+
+- `X`: Contains input features such as alcohol, ash, magnesium, etc.
+- `y`: Contains the target class of wine.
+
+`axis=1` means the `class` column is removed.
+
+## **4. Feature scaling**
+
+```
+X = StandardScaler().fit_transform(X)
+```
+
+Feature scaling converts numerical features into a common scale.
+
+Why is scaling required?
+
+Wine features have different measurement ranges. For example, alcohol and magnesium may have very different numerical values.
+
+PCA is affected by feature scales, so standardization is important.
+
+StandardScaler uses:
+
+\\[ Z = \frac{X-\mu}{\sigma} \\]
+
+Where:
+
+- X = Original value
+- μ = Mean
+- σ = Standard deviation
+- Z = Standardized value
+
+After scaling, features have approximately:
+
+- Mean = 0
+- Standard deviation = 1
+
+## **5. PCA transformation**
+
+```
+pca = PCA()X_pca = pca.fit_transform(X)
+```
+
+This is the main step of the experiment.
+
+- `PCA()`: Creates a PCA object.
+- `fit_transform()`: Learns the principal components and transforms the original data into a new feature space.
+- `X_pca`: Stores the transformed data.
+
+**What is PCA?**
+
+PCA stands for Principal Component Analysis.
+
+It is a dimensionality reduction technique that converts many correlated features into a smaller number of new features called principal components.
+
+**How PCA works**
+
+**Original Wine Dataset**
+
+Alcohol, Ash, Magnesium, Malic Acid, etc.
+
+StandardScaler
+
+**PCA Transformation**
+
+Finds directions of maximum variance
+
+**PC1**
+
+Maximum variance
+
+**PC2**
+
+Next highest variance
+
+**2D Visualization**
+
+Reduced dataset with two principal components
+
+## **6. Explained variance**
+
+```
+plt.plot(pca.explained_variance_ratio_.cumsum(), marker='o')plt.xlabel("Principal Components")plt.ylabel("Cumulative Explained Variance")plt.title("Explained Variance")plt.show()
+```
+
+This graph shows how much total information is retained when more principal components are selected.
+
+Important terms:
+
+- `explained_variance_ratio_`: Gives the percentage of variance explained by each principal component.
+- `cumsum()`: Calculates cumulative explained variance.
+- `marker='o'`: Displays circular markers on the graph.
+
+**Example:**
+
+Suppose the cumulative explained variance is:
+
+| Components  | Cumulative variance |
+| ----------- | ------------------- |
+| PC1         | 36%                 |
+| PC1 + PC2   | 56%                 |
+| First 5 PCs | 85%                 |
+| First 8 PCs | 95%                 |
+
+These are illustrative values, not actual results from your dataset.
+
+**How to understand the graph:**
+
+- X-axis: Number of principal components.
+- Y-axis: Cumulative explained variance.
+- Higher values mean more information is retained.
+
+## **7. Reduce dimensions to 2 components**
+
+```
+pca = PCA(n_components=2)X_pca = pca.fit_transform(X)
+```
+
+- `n_components=2`: Selects only two principal components.
+- `fit_transform()`: Transforms the original features into two dimensions.
+
+Now the dataset has only two new features: PC1 and PC2.
+
+This makes visualization easier.
+
+## **8. PCA visualization**
+
+```
+for i in sorted(y.unique()):    plt.scatter(        X_pca[y == i, 0],        X_pca[y == i, 1],        label=f"Class {i}"    )
+```
+
+This code creates a scatter plot for different wine classes.
+
+Explanation:
+
+- `y.unique()`: Finds the unique wine classes.
+- `sorted()`: Sorts the class values.
+- `plt.scatter()`: Creates a scatter plot.
+- `X_pca[y == i, 0]`: Selects the first principal component for a particular class.
+- `X_pca[y == i, 1]`: Selects the second principal component for a particular class.
+- `label`: Assigns a name to each class.
+
+Graph labels:
+
+```
+plt.xlabel("Principal Component 1")plt.ylabel("Principal Component 2")plt.title("PCA Visualization")plt.legend()plt.show()
+```
+
+**How to understand this graph:**
+
+- X-axis represents PC1.
+- Y-axis represents PC2.
+- Each point represents a wine sample.
+- Different colors or labels represent different wine classes.
+- Points forming separate groups indicate that the classes may be distinguishable using the two components.
+
+## **9. Display explained variance**
+
+```
+print("Explained Variance:", pca.explained_variance_ratio_.sum())
+```
+
+Calculates the total variance retained by the two selected principal components.
+
+For example, if the output is `0.56`, it means the first two components preserve approximately 56% of the original dataset's variance.
+
+## **Important Viva Questions and Answers**
+
+**1. What is PCA?**
+
+PCA stands for Principal Component Analysis. It is a dimensionality reduction technique used to reduce the number of features while retaining maximum information.
+
+**2. What is dimensionality reduction?**
+
+Dimensionality reduction is the process of reducing the number of input features in a dataset.
+
+**3. Why do we use PCA?**
+
+We use PCA to reduce features, remove redundancy, simplify data, and make visualization easier.
+
+**4. What is a principal component?**
+
+A principal component is a new feature created by combining the original features.
+
+**5. What is PC1?**
+
+PC1 is the first principal component. It captures the maximum possible variance in the data.
+
+**6. What is PC2?**
+
+PC2 is the second principal component. It captures the maximum remaining variance and is perpendicular to PC1.
+
+**7. Why is feature scaling required before PCA?**
+
+Because features may have different measurement ranges, and PCA is sensitive to differences in scale.
+
+**8. What is StandardScaler?**
+
+StandardScaler is a preprocessing technique that transforms features to approximately zero mean and unit variance.
+
+**9. What is explained variance?**
+
+Explained variance indicates how much information or variation is captured by a principal component.
+
+**10. What is&#x20;**`explained_variance_ratio_`**?**
+
+It gives the proportion of total variance explained by each principal component.
+
+**11. What is&#x20;**`cumsum()`**?**
+
+It calculates the cumulative sum of values.
+
+**12. What is&#x20;**`n_components=2`**?**
+
+It selects only two principal components for the transformed dataset.
+
+**13. What is&#x20;**`fit_transform()`**?**
+
+It learns the transformation from the data and applies it to the same data.
+
+**14. Is PCA supervised or unsupervised?**
+
+PCA is an unsupervised learning technique because it does not use target labels to find principal components.
+
+**15. What is the difference between original features and principal components?**
+
+Original features are the columns in the original dataset, while principal components are new features formed as combinations of original features.
+
+**16. What is the purpose of a scatter plot in PCA?**
+
+It helps visualize how different classes are distributed in the reduced two-dimensional space.
+
+**17. What is the main disadvantage of PCA?**
+
+Principal components may be difficult to interpret because they combine multiple original features.
+
+**18. Does PCA always improve accuracy?**
+
+No. PCA reduces dimensions, but it does not guarantee better model accuracy.
+
+**19. What does&#x20;**`y.unique()`**&#x20;do?**
+
+It returns the unique class values from the target column.
+
+**20. What is the output of PCA?**
+
+The output is a transformed dataset containing principal component values.
+
+## **Important points to remember for practical exam**
+
+1. Dataset: `Winedataset.csv`.
+2. Algorithm: Principal Component Analysis (PCA).
+3. Library: Scikit-learn.
+4. Feature scaling: StandardScaler.
+5. Dimensionality reduction: PCA.
+6. `explained_variance_ratio_`: Measures variance captured.
+7. `cumsum()`: Calculates cumulative variance.
+8. `n_components=2`: Reduces data to two components.
+9. Visualization: Scatter plot.
+10. PCA type: Unsupervised learning technique.
+
+**Practical conclusion:**
+
+PCA was successfully applied to the wine dataset for dimensionality reduction. The features were standardized, transformed into principal components, and visualized using a scatter plot. Explained variance was calculated to understand how much information was retained by the selected components.
+
+**One important clarification:** Your problem statement mentions distinguishing between red and white wine, but the commonly used wine dataset has three wine classes, and some wine datasets use class labels for different wine cultivars. Check the actual values in `df["class"].unique()` before describing the classes as red and white wine.

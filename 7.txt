@@ -1,0 +1,327 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+csv_data = pd.read_csv("retail_sales_dataset.csv")
+excel_data = pd.read_excel("retail_sales_dataset.xlsx")
+json_data = pd.read_json("retail_sales_dataset.json")
+print("CSV Data")
+print(csv_data.head())
+print("\nExcel Data")
+print(excel_data.head())
+print("\nJSON Data")
+print(json_data.head())
+print("\nCSV Information")
+csv_data.info()
+print("\nExcel Information")
+excel_data.info()
+print("\nJSON Information")
+json_data.info()
+print("\nMissing Values - CSV")
+print(csv_data.isnull().sum())
+print("\nMissing Values - Excel")
+print(excel_data.isnull().sum())
+print("\nMissing Values - JSON")
+print(json_data.isnull().sum())
+csv_data.drop_duplicates(inplace=True)
+excel_data.drop_duplicates(inplace=True)
+json_data.drop_duplicates(inplace=True)
+csv_data.fillna(0, inplace=True)
+excel_data.fillna(0, inplace=True)
+json_data.fillna(0, inplace=True)
+sales = pd.concat(
+    [csv_data, excel_data, json_data],
+    ignore_index=True
+)
+print("\nMerged Dataset")
+print(sales.head())
+sales["Total"] = sales["Quantity"] * sales["Price per Unit"]
+print("\nSummary Statistics")
+print(sales.describe())
+total_sales = sales["Total"].sum()
+print("\nTotal Sales =", total_sales)
+average_order = sales["Total"].mean()
+print("Average Order Value =", average_order)
+category_sales = sales.groupby("Product Category")["Total"].sum()
+print("\nSales by Category")
+print(category_sales)
+category_distribution = sales["Product Category"].value_counts()
+print("\nCategory Distribution")
+print(category_distribution)
+plt.figure(figsize=(8, 5))
+category_sales.plot(kind="bar")
+plt.title("Sales by Category")
+plt.xlabel("Category")
+plt.ylabel("Total Sales")
+plt.show()
+plt.figure(figsize=(6, 6))
+category_distribution.plot(kind="pie", autopct="%1.1f%%")
+plt.title("Category Distribution")
+plt.ylabel("")
+plt.show()
+plt.figure(figsize=(6, 4))
+sales.boxplot(column="Total")
+plt.title("Sales Box Plot")
+plt.ylabel("Total Sales")
+plt.show()
+
+
+
+
+
+# **Retail Sales Data Analysis – Code Explanation + Important Viva Questions**
+
+## **1. Import libraries**
+
+```
+import pandas as pdimport matplotlib.pyplot as plt
+```
+
+- `pandas`: Used for data loading and analysis.
+- `matplotlib`: Used for creating graphs.
+- `pd` and `plt` are aliases.
+
+## **2. Load datasets**
+
+```
+csv_data = pd.read_csv("retail_sales_dataset.csv")excel_data = pd.read_excel("retail_sales_dataset.xlsx")json_data = pd.read_json("retail_sales_dataset.json")
+```
+
+- `read_csv()` reads CSV files.
+- `read_excel()` reads Excel files.
+- `read_json()` reads JSON files.
+- Data is stored in DataFrames.
+
+## **3. Display first five rows**
+
+```
+print(csv_data.head())print(excel_data.head())print(json_data.head())
+```
+
+`head()` displays the first five rows of a dataset.
+
+## **4. Display dataset information**
+
+```
+csv_data.info()excel_data.info()json_data.info()
+```
+
+`info()` displays rows, columns, column names, data types, and non-null values.
+
+## **5. Check missing values**
+
+```
+print(csv_data.isnull().sum())print(excel_data.isnull().sum())print(json_data.isnull().sum())
+```
+
+- `isnull()` identifies missing values.
+- `sum()` counts missing values in each column.
+
+## **6. Remove duplicate records**
+
+```
+csv_data.drop_duplicates(inplace=True)excel_data.drop_duplicates(inplace=True)json_data.drop_duplicates(inplace=True)
+```
+
+- `drop_duplicates()` removes repeated rows.
+- `inplace=True` modifies the original DataFrame.
+
+## **7. Handle missing values**
+
+```
+csv_data.fillna(0, inplace=True)excel_data.fillna(0, inplace=True)json_data.fillna(0, inplace=True)
+```
+
+- `fillna(0)` replaces missing values with zero.
+- `inplace=True` updates the original dataset.
+
+## **8. Merge datasets**
+
+```
+sales = pd.concat(    [csv_data, excel_data, json_data],    ignore_index=True)
+```
+
+- `pd.concat()` combines multiple DataFrames.
+- `ignore_index=True` creates fresh continuous row numbers.
+
+## **9. Calculate total sales**
+
+```
+sales["Total"] = sales["Quantity"] * sales["Price per Unit"]
+```
+
+Creates a new column named Total.
+
+Formula:
+
+Total Sales = Quantity × Price per Unit.
+
+## **10. Summary statistics**
+
+```
+print(sales.describe())
+```
+
+Displays count, mean, standard deviation, minimum, maximum, and quartiles.
+
+## **11. Calculate total sales**
+
+```
+total_sales = sales["Total"].sum()
+```
+
+`sum()` calculates the total sales amount.
+
+## **12. Calculate average sales**
+
+```
+average_order = sales["Total"].mean()
+```
+
+`mean()` calculates the average sales amount per row.
+
+## **13. Sales by category**
+
+```
+category_sales = sales.groupby("Product Category")["Total"].sum()
+```
+
+- `groupby()` groups records by product category.
+- `sum()` calculates total sales for each category.
+
+## **14. Category distribution**
+
+```
+category_distribution = sales["Product Category"].value_counts()
+```
+
+`value_counts()` counts how many times each product category appears.
+
+## **15. Bar chart**
+
+```
+plt.figure(figsize=(8, 5))category_sales.plot(kind="bar")plt.title("Sales by Category")plt.xlabel("Category")plt.ylabel("Total Sales")plt.show()
+```
+
+- `figure()` sets graph size.
+- `kind="bar"` creates a bar chart.
+- `title()` sets graph title.
+- `xlabel()` and `ylabel()` set axis names.
+- `show()` displays the graph.
+
+Purpose: Compares sales across categories.
+
+## **16. Pie chart**
+
+```
+plt.figure(figsize=(6, 6))category_distribution.plot(kind="pie", autopct="%1.1f%%")plt.title("Category Distribution")plt.ylabel("")plt.show()
+```
+
+- `kind="pie"` creates a pie chart.
+- `autopct="%1.1f%%"` displays percentages with one decimal place.
+- `ylabel("")` removes the Y-axis label.
+
+Purpose: Shows category-wise percentage distribution.
+
+## **17. Box plot**
+
+```
+plt.figure(figsize=(6, 4))sales.boxplot(column="Total")plt.title("Sales Box Plot")plt.ylabel("Total Sales")plt.show()
+```
+
+- `boxplot()` creates a box plot.
+- It shows the distribution of sales and helps identify outliers.
+
+# **Important Viva Questions and Answers**
+
+**Q1. What is the aim of this experiment?**
+
+To load, clean, merge, analyze, and visualize sales data from CSV, Excel, and JSON files.
+
+**Q2. What is Pandas?**
+
+Pandas is a Python library used for data manipulation and analysis.
+
+**Q3. What is a DataFrame?**
+
+A DataFrame is a two-dimensional data structure containing rows and columns.
+
+**Q4. What is CSV?**
+
+CSV stands for Comma-Separated Values. It stores data in tabular text format.
+
+**Q5. What is JSON?**
+
+JSON stands for JavaScript Object Notation. It stores data in key-value pair format.
+
+**Q6. What is the use of read_csv(), read_excel(), and read_json()?**
+
+They are used to read CSV, Excel, and JSON files.
+
+**Q7. What is head()?**
+
+It displays the first five rows of a DataFrame by default.
+
+**Q8. What is info()?**
+
+It displays information about rows, columns, and data types.
+
+**Q9. What is isnull().sum()?**
+
+It counts missing values in each column.
+
+**Q10. What is drop_duplicates()?**
+
+It removes duplicate rows.
+
+**Q11. What is fillna()?**
+
+It replaces missing values with a specified value.
+
+**Q12. What is inplace=True?**
+
+It modifies the original DataFrame directly.
+
+**Q13. What is pd.concat()?**
+
+It combines multiple DataFrames into one.
+
+**Q14. What is describe()?**
+
+It displays summary statistics such as mean, minimum, maximum, and standard deviation.
+
+**Q15. What is groupby()?**
+
+It groups data based on a particular column.
+
+**Q16. What is value_counts()?**
+
+It counts the frequency of unique values.
+
+**Q17. What is the formula for total sales?**
+
+Total Sales = Quantity × Price per Unit.
+
+**Q18. What is mean()?**
+
+It calculates the average value.
+
+**Q19. What is Matplotlib?**
+
+Matplotlib is a Python library used for data visualization.
+
+**Q20. What is a bar chart?**
+
+It compares values across different categories.
+
+**Q21. What is a pie chart?**
+
+It represents data using percentages or proportions.
+
+**Q22. What is a box plot?**
+
+It shows data distribution and helps identify outliers.
+
+**Q23. What is an outlier?**
+
+An outlier is a value that is significantly different from other values.
+
+

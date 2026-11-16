@@ -1,0 +1,373 @@
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
+import matplotlib.pyplot as plt
+
+# 1. Load dataset
+digits = load_digits()
+
+# 2. Input and output
+X = digits.data
+y = digits.target
+
+# 3. Display sample image
+plt.imshow(digits.images[0], cmap='gray')
+plt.title("Digit: " + str(y[0]))
+plt.show()
+
+# 4. Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+ X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# 5. Create SVM model
+model = SVC(kernel='rbf')
+
+# 6. Train model
+model.fit(X_train, y_train)
+
+# 7. Prediction
+y_pred = model.predict(X_test)
+
+# 8. Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# 9. Classification report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# 10. Display predictions
+for i in range(5):
+ plt.imshow(X_test[i].reshape(8, 8), cmap='gray')
+ plt.title("Actual: {} Predicted: {}".format(
+ y_test[i], y_pred[i]
+ ))
+ plt.show()
+
+
+
+
+
+
+
+
+
+# **Classification Analysis – Handwritten Digit Recognition Using SVM**
+
+## **1. Aim / Problem Statement**
+
+To implement a Support Vector Machine (SVM) algorithm to classify images of handwritten digits into their respective numerical classes from 0 to 9.
+
+In this practical, we will:
+
+1. Load the handwritten digits dataset.
+2. Separate input features and output labels.
+3. Display a sample handwritten digit.
+4. Split the dataset into training and testing data.
+5. Create and train an SVM model.
+6. Predict handwritten digits.
+7. Evaluate the model using accuracy and classification report.
+8. Display actual and predicted digits.
+
+## **2. Explanation of Code Step by Step**
+
+### **Step 1: Import Libraries**
+
+```
+from sklearn.datasets import load_digitsfrom sklearn.model_selection import train_test_splitfrom sklearn.svm import SVCfrom sklearn.metrics import accuracy_score, classification_reportimport matplotlib.pyplot as plt
+```
+
+- `load_digits`: Loads the handwritten digits dataset.
+- `train_test_split`: Splits the dataset into training and testing data.
+- `SVC`: Implements the Support Vector Machine classification algorithm.
+- `accuracy_score`: Calculates the accuracy of the model.
+- `classification_report`: Displays precision, recall, and F1-score.
+- `matplotlib.pyplot`: Used to display digit images.
+
+### **Step 2: Load Dataset**
+
+```
+digits = load_digits()
+```
+
+- Loads the built-in handwritten digits dataset from Scikit-learn.
+- It contains images of handwritten digits from 0 to 9.
+- Each image has a size of 8 × 8 pixels.
+
+### **Step 3: Separate Input and Output**
+
+```
+X = digits.datay = digits.target
+```
+
+- `X`: Contains input features (pixel values).
+- `y`: Contains output labels (actual digits from 0 to 9).
+
+**Important:** Each 8 × 8 image contains 64 pixels. These 64 pixel values are converted into a one-dimensional array for the SVM model.
+
+For example:
+
+\\[ 8 \times 8 = 64 \text{ features} \\]
+
+### **Step 4: Display Sample Image**
+
+```
+plt.imshow(digits.images[0], cmap='gray')plt.title("Digit: " + str(y[0]))plt.show()
+```
+
+- `plt.imshow()`: Displays the image.
+- `digits.images[0]`: Selects the first digit image.
+- `cmap='gray'`: Displays the image in grayscale.
+- `plt.title()`: Displays the actual digit as the title.
+- `plt.show()`: Shows the image.
+
+This step helps us visually understand the handwritten digit dataset.
+
+### **Step 5: Split Dataset**
+
+```
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42, stratify=y)
+```
+
+Divides the dataset into training and testing data.
+
+- `X_train`: Input data used for training.
+- `X_test`: Input data used for testing.
+- `y_train`: Actual output labels for training.
+- `y_test`: Actual output labels for testing.
+- `test_size=0.2`: Uses 20% data for testing and 80% for training.
+- `random_state=42`: Ensures reproducible splitting.
+- `stratify=y`: Maintains approximately the same proportion of each digit class in training and testing data.
+
+### **Step 6: Create SVM Model**
+
+```
+model = SVC(kernel='rbf')
+```
+
+- `SVC` stands for Support Vector Classifier.
+- It is used for classification problems.
+- `kernel='rbf'` uses the Radial Basis Function kernel.
+
+**What is SVM?**
+
+Support Vector Machine is a supervised machine learning algorithm used for classification and regression.
+
+It finds the best decision boundary (hyperplane) that separates different classes.
+
+[Supervised Learning: Classification Using Support Vector Machines (SVM) | by Ashkan Beheshti | Medium](https://images.openai.com/static-rsc-4/xksd4r-OdLuKm05JmUHsOziQDuUZ9LbFqPPh0NU_riavONg7ItZPKj9KqsnXCKgJfpQtTeXI_rQ4Oejc3tE_5_OMAoiozQuWGYyKpZc80LUjqZM_qL9gUHunbNTQZ8GUtVx3yJhdgHKyh6YcEWhfjFQv8sSzNMoN2u-9PbRM7wE?purpose=inline)
+
+**What is RBF kernel?**
+
+- RBF stands for Radial Basis Function.
+- It helps SVM classify data that cannot be separated using a straight line.
+- It is useful for complex classification problems.
+
+### **Step 7: Train Model**
+
+```
+model.fit(X_train, y_train)
+```
+
+- `fit()` trains the SVM model using training data.
+- It learns patterns and relationships between pixel values and digit labels.
+- After training, the model can classify new handwritten digit images.
+
+### **Step 8: Make Predictions**
+
+```
+y_pred = model.predict(X_test)
+```
+
+- `predict()` predicts the digit classes for the testing data.
+- `y_pred` stores the predicted digit values.
+- Predictions range from 0 to 9.
+
+### **Step 9: Calculate Accuracy**
+
+```
+accuracy = accuracy_score(y_test, y_pred)print("Accuracy:", accuracy)
+```
+
+- `accuracy_score()` compares actual labels with predicted labels.
+- It calculates the percentage of correctly classified digits.
+
+Formula:
+
+\\[ Accuracy=\frac{\text{Correct Predictions}}{\text{Total Predictions}}\times100 \\]
+
+Higher accuracy means better classification performance.
+
+### **Step 10: Classification Report**
+
+```
+print("\nClassification Report:")print(classification_report(y_test, y_pred))
+```
+
+Displays four important evaluation measures:
+
+| Metric    | Meaning                                                    |
+| --------- | ---------------------------------------------------------- |
+| Precision | How many predicted positive results are actually correct.  |
+| Recall    | How many actual positive results are correctly identified. |
+| F1-score  | Harmonic mean of precision and recall.                     |
+| Support   | Number of actual samples belonging to each class.          |
+
+**Simple understanding:**
+
+- Precision: Out of the digits predicted as 5, how many were actually 5?
+- Recall: Out of all actual 5 digits, how many were correctly identified?
+- F1-score: Balance between precision and recall.
+- Support: Total number of actual images for a particular digit.
+
+### **Step 11: Display Predictions**
+
+```
+for i in range(5): plt.imshow(X_test[i].reshape(8, 8), cmap='gray') plt.title("Actual: {} Predicted: {}".format( y_test[i], y_pred[i] )) plt.show()
+```
+
+Explanation:
+
+- `for i in range(5)`: Displays the first five testing images.
+- `X_test[i]`: Selects one testing image.
+- `.reshape(8, 8)`: Converts 64 pixel values back into an 8 × 8 image.
+- `plt.imshow()`: Displays the handwritten digit.
+- `y_test[i]`: Shows the actual digit.
+- `y_pred[i]`: Shows the predicted digit.
+- `plt.title()`: Displays both actual and predicted values.
+
+This helps us check whether the model correctly recognizes handwritten digits.
+
+## **3. Important SVM Concepts**
+
+**1. What is Classification?**
+
+Classification is a supervised machine learning technique used to predict categories or classes.
+
+Example: Classifying handwritten images into digits from 0 to 9.
+
+**2. What is a Hyperplane?**
+
+A hyperplane is a decision boundary that separates different classes in a dataset.
+
+**3. What are Support Vectors?**
+
+Support vectors are the closest data points to the decision boundary. They help determine the position of the hyperplane.
+
+**4. What is Kernel?**
+
+A kernel is a function that helps SVM identify decision boundaries, especially when data is not linearly separable.
+
+**5. Types of SVM Kernels**
+
+- Linear Kernel
+- Polynomial Kernel
+- RBF Kernel
+- Sigmoid Kernel
+
+## **4. Important Viva Questions and Answers**
+
+**1. What is SVM?**
+
+SVM stands for Support Vector Machine. It is a supervised machine learning algorithm used for classification and regression.
+
+**2. What is the aim of this practical?**
+
+To classify handwritten digit images into numerical classes from 0 to 9 using SVM.
+
+**3. Which dataset is used?**
+
+The built-in handwritten digits dataset from Scikit-learn.
+
+**4. How many classes are present in the dataset?**
+
+There are 10 classes, representing digits from 0 to 9.
+
+**5. What is the size of each image?**
+
+Each image has a size of 8 × 8 pixels.
+
+**6. How many features are present in each image?**
+
+There are 64 features because each image contains 64 pixels.
+
+**7. What is supervised learning?**
+
+Supervised learning is a machine learning technique in which a model learns from labelled training data.
+
+**8. What is a Support Vector?**
+
+A support vector is a data point closest to the decision boundary.
+
+**9. What is a hyperplane?**
+
+A hyperplane is a decision boundary used to separate different classes.
+
+**10. What is a kernel in SVM?**
+
+A kernel helps SVM handle different types of data relationships and create decision boundaries.
+
+**11. What is RBF?**
+
+RBF stands for Radial Basis Function. It is a kernel used to handle non-linear classification problems.
+
+**12. What is SVC?**
+
+SVC stands for Support Vector Classifier. It is Scikit-learn's implementation of SVM classification.
+
+**13. What is the purpose of train_test_split?**
+
+It divides the dataset into training and testing data.
+
+**14. What is the purpose of random_state=42?**
+
+It ensures that the dataset is split consistently whenever the code is executed.
+
+**15. What is stratify=y?**
+
+It maintains the proportion of each digit class in training and testing datasets.
+
+**16. What is accuracy?**
+
+Accuracy is the percentage of correctly predicted samples out of the total samples.
+
+**17. What is precision?**
+
+Precision measures how many predicted positive samples are actually positive.
+
+**18. What is recall?**
+
+Recall measures how many actual positive samples are correctly identified.
+
+**19. What is F1-score?**
+
+F1-score is the harmonic mean of precision and recall.
+
+**20. Why do we use reshape(8, 8)?**
+
+It converts the 64 pixel values back into the original 8 × 8 image format for display.
+
+## **5. Important Points to Remember for Practical Exam**
+
+| Topic                  | Answer                                |
+| ---------------------- | ------------------------------------- |
+| Problem type           | Classification                        |
+| Learning type          | Supervised Learning                   |
+| Algorithm              | SVM                                   |
+| Dataset                | Handwritten Digits                    |
+| Number of classes      | 10                                    |
+| Image size             | 8 × 8                                 |
+| Features               | 64                                    |
+| Input                  | Pixel values                          |
+| Output                 | Digits 0–9                            |
+| Kernel used            | RBF                                   |
+| Training/testing split | 80% / 20%                             |
+| Evaluation             | Accuracy, Precision, Recall, F1-score |
+
+## **6. Conclusion**
+
+In this practical, we implemented the Support Vector Machine algorithm to recognize handwritten digits from 0 to 9. We trained the model using the handwritten digits dataset and tested it using unseen images. Finally, we evaluated the model using accuracy and classification report.
+
+**Remember:** SVM is used for classification, and the RBF kernel helps classify complex, non-linear data.

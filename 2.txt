@@ -1,0 +1,566 @@
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+
+# 1. Load Dataset
+df = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\uber.csv")
+
+print(df.head())
+print(df.isnull().sum())
+
+# 2. Preprocessing
+df.drop("Unnamed: 0", axis=1, inplace=True, errors="ignore")
+
+df["pickup_datetime"] = pd.to_datetime(df["pickup_datetime"], errors="coerce")
+df["pickup_hour"] = df["pickup_datetime"].dt.hour
+
+df.dropna(inplace=True)
+
+df = df[(df["fare_amount"] > 0) &
+        (df["passenger_count"].between(1, 6))]
+
+# 3. Calculate Distance
+df["distance"] = np.sqrt(
+    (df["dropoff_longitude"] - df["pickup_longitude"])**2 +
+    (df["dropoff_latitude"] - df["pickup_latitude"])**2
+)
+
+df = df[df["distance"] > 0]
+
+# 4. Identify Outliers using Boxplot
+sns.boxplot(x=df["fare_amount"])
+plt.title("Fare Amount Before Outlier Removal")
+plt.show()
+
+# 5. Remove Outliers using IQR
+Q1 = df["fare_amount"].quantile(0.25)
+Q3 = df["fare_amount"].quantile(0.75)
+IQR = Q3 - Q1
+
+df = df[df["fare_amount"].between(
+    Q1 - 1.5 * IQR,
+    Q3 + 1.5 * IQR
+)]
+
+# 6. Correlation Heatmap
+features = [
+    "passenger_count", "pickup_hour",
+    "pickup_longitude", "pickup_latitude",
+    "dropoff_longitude", "dropoff_latitude", "distance"
+]
+
+sns.heatmap(df[features + ["fare_amount"]].corr(),
+            annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
+
+# 7. Select Features and Target
+X = df[features]
+y = df["fare_amount"]
+
+# 8. Train Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 9. Apply Regression Models
+models = {
+    "Linear Regression": LinearRegression(),
+    "Ridge Regression": Ridge(alpha=1.0),
+    "Lasso Regression": Lasso(alpha=0.01)
+}
+
+results = []
+
+for name, model in models.items():
+
+    model = make_pipeline(StandardScaler(), model)
+    model.fit(X_train, y_train)
+
+    pred = model.predict(X_test)
+
+    r2 = r2_score(y_test, pred)
+    rmse = np.sqrt(mean_squared_error(y_test, pred))
+    mae = mean_absolute_error(y_test, pred)
+
+    results.append([name, r2, rmse, mae])
+
+# 10. Model Comparison
+result = pd.DataFrame(
+    results,
+    columns=["Model", "R2 Score", "RMSE", "MAE"]
+)
+
+print("\nModel Comparison:")
+print(result)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# **Regression Analysis – Uber Fare Prediction**
+
+## **1. Aim / Problem Statement**
+
+To predict the price (fare amount) of an Uber ride based on the pickup location, drop-off location, passenger count, and pickup time using regression algorithms.
+
+We will perform the following tasks:
+
+1. Pre-process the dataset.
+2. Identify and remove outliers.
+3. Check correlation between features.
+4. Implement Linear Regression, Ridge Regression, and Lasso Regression.
+5. Evaluate and compare models using R² Score, RMSE, and MAE.
+
+# **2. Explanation of Code Step by Step**
+
+## **Step 1: Import Libraries**
+
+```
+import pandas as pdimport numpy as npimport matplotlib.pyplot as pltimport seaborn as sns
+```
+
+- `pandas`: Used to load and manipulate datasets.
+- `numpy`: Used for mathematical calculations.
+- `matplotlib.pyplot`: Used to create graphs.
+- `seaborn`: Used to create statistical visualizations like boxplots and heatmaps.
+
+```
+from sklearn.model_selection import train_test_split
+```
+
+\- Splits the dataset into training and testing data.
+
+```
+from sklearn.preprocessing import StandardScaler
+```
+
+\- Standardizes the features so they have approximately the same scale.
+
+```
+from sklearn.pipeline import make_pipeline
+```
+
+\- Combines multiple steps, such as scaling and model training, into one pipeline.
+
+```
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+```
+
+Imports three regression algorithms:
+
+- Linear Regression
+- Ridge Regression
+- Lasso Regression
+
+```
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+```
+
+Imports evaluation metrics to measure model performance.
+
+## **Step 2: Load Dataset**
+
+```
+df = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\uber.csv")print(df.head())print(df.isnull().sum())
+```
+
+- `pd.read_csv()`: Loads the Uber dataset.
+- `df.head()`: Displays the first five records.
+- `df.isnull().sum()`: Counts missing values in each column.
+- `r` before the file path means raw string. It helps handle Windows backslashes.
+
+## **Step 3: Data Preprocessing**
+
+```
+df.drop("Unnamed: 0", axis=1, inplace=True, errors="ignore")
+```
+
+- Removes the unnecessary `Unnamed: 0` column.
+- `axis=1`: Indicates column removal.
+- `inplace=True`: Changes the original DataFrame.
+- `errors="ignore"`: Does not show an error if the column is absent.
+
+```
+df["pickup_datetime"] = pd.to_datetime(    df["pickup_datetime"], errors="coerce")
+```
+
+- Converts pickup date and time into datetime format.
+- `errors="coerce"`: Converts invalid date values into missing values (`NaT`).
+
+```
+df["pickup_hour"] = df["pickup_datetime"].dt.hour
+```
+
+- Extracts the pickup hour from the datetime column.
+- Example: If the pickup time is 14:30, the extracted hour is 14.
+
+```
+df.dropna(inplace=True)
+```
+
+\- Removes rows containing missing values.
+
+```
+df = df[(df["fare_amount"] > 0) &        (df["passenger_count"].between(1, 6))]
+```
+
+- Removes records where fare is zero or negative.
+- Keeps rides with passenger counts between 1 and 6.
+- `&` means AND.
+- `between(1, 6)` checks whether the value lies between 1 and 6, including both.
+
+## **Step 4: Calculate Distance**
+
+```
+df["distance"] = np.sqrt(    (df["dropoff_longitude"] - df["pickup_longitude"])**2 +    (df["dropoff_latitude"] - df["pickup_latitude"])**2)
+```
+
+This calculates the straight-line distance between pickup and drop-off coordinates using the Euclidean distance formula.
+
+Formula:
+
+\\[ d=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2} \\]
+
+- Longitude represents the east-west coordinate.
+- Latitude represents the north-south coordinate.
+- `np.sqrt()`: Calculates square root.
+- `**2`: Squares a value.
+
+**Note:** This is an approximate distance in coordinate degrees, not kilometres. For accurate ride distance, geographic distance such as the Haversine distance should be used.
+
+```
+df = df[df["distance"] > 0]
+```
+
+Removes records where pickup and drop-off coordinates are identical.
+
+## **Step 5: Identify Outliers Using Boxplot**
+
+```
+sns.boxplot(x=df["fare_amount"])plt.title("Fare Amount Before Outlier Removal")plt.show()
+```
+
+- `sns.boxplot()`: Creates a boxplot of fare amounts.
+- `plt.title()`: Adds a graph title.
+- `plt.show()`: Displays the graph.
+
+A boxplot helps identify outliers.
+
+[The Evolution of a ggplot (Ep. 1) - Cédric Scherer](https://images.openai.com/static-rsc-4/ZclQqWxOGXMMZ5Jat3nJ_xeI7fTJkgAIzgOHap_CiiRxDoD2HgXPio4clcqrxpXMatQp9KPhEVsGv_6T11OnCCkEz2QwLokj0wgYnhTAqyCvBghL4vVBvB4RLhPKZVb6fHqOOjgjtspVaJPS4vgaV8gxVun0lYwttz1hKe_neGY?purpose=inline)
+
+**Boxplot components:**
+
+- Minimum: Lowest value within the whisker.
+- Q1: First quartile (25%).
+- Median: Middle value (50%).
+- Q3: Third quartile (75%).
+- Maximum: Highest value within the whisker.
+- Dots outside whiskers: Potential outliers.
+
+## **Step 6: Remove Outliers Using IQR**
+
+```
+Q1 = df["fare_amount"].quantile(0.25)Q3 = df["fare_amount"].quantile(0.75)IQR = Q3 - Q1
+```
+
+- `Q1`: Calculates the 25th percentile.
+- `Q3`: Calculates the 75th percentile.
+- `IQR`: Interquartile Range.
+
+Formula:
+
+\\[ IQR=Q3-Q1 \\]
+
+```
+df = df[df["fare_amount"].between(    Q1 - 1.5 * IQR,    Q3 + 1.5 * IQR)]
+```
+
+Removes fare values outside the accepted range.
+
+Lower limit:
+
+\\[ Q1-1.5\times IQR \\]
+
+Upper limit:
+
+\\[ Q3+1.5\times IQR \\]
+
+Values outside these limits are treated as potential outliers and removed.
+
+## **Step 7: Correlation Heatmap**
+
+```
+features = [    "passenger_count", "pickup_hour",    "pickup_longitude", "pickup_latitude",    "dropoff_longitude", "dropoff_latitude", "distance"]
+```
+
+Creates a list of independent variables (features) used for prediction.
+
+```
+sns.heatmap(df[features + ["fare_amount"]].corr(),            annot=True, cmap="coolwarm")plt.title("Correlation Heatmap")plt.show()
+```
+
+- `.corr()`: Calculates correlation between numerical columns.
+- `sns.heatmap()`: Displays correlation using colors.
+- `annot=True`: Displays correlation values inside the heatmap.
+- `cmap="coolwarm"`: Uses different colors to represent correlation.
+
+**Correlation values:**
+
+| Value | Meaning                      |
+| ----- | ---------------------------- |
+| +1    | Perfect positive correlation |
+| 0     | No linear correlation        |
+| -1    | Perfect negative correlation |
+
+Positive correlation means two variables tend to increase together. Negative correlation means one tends to decrease when the other increases.
+
+## **Step 8: Select Features and Target**
+
+```
+X = df[features]y = df["fare_amount"]
+```
+
+- `X`: Independent variables used to predict the fare.
+- `y`: Dependent variable or target.
+
+Here, the target is `fare_amount`.
+
+## **Step 9: Train-Test Split**
+
+```
+X_train, X_test, y_train, y_test = train_test_split(    X, y, test_size=0.2, random_state=42)
+```
+
+Divides the dataset into two parts.
+
+- 80% data: Training data.
+- 20% data: Testing data.
+- `random_state=42`: Ensures the same split when the code is run again.
+
+Training data is used to train the model, while testing data is used to evaluate it.
+
+## **Step 10: Apply Regression Models**
+
+```
+models = {    "Linear Regression": LinearRegression(),    "Ridge Regression": Ridge(alpha=1.0),    "Lasso Regression": Lasso(alpha=0.01)}
+```
+
+Creates three regression models.
+
+**1. Linear Regression**
+
+- Predicts a continuous numerical value.
+- Finds the best-fit straight-line relationship between input features and target.
+- Used as the basic regression model.
+
+**2. Ridge Regression**
+
+- Linear Regression with L2 regularization.
+- Reduces large coefficient values.
+- Helps reduce overfitting.
+
+**3. Lasso Regression**
+
+- Linear Regression with L1 regularization.
+- Can reduce less important feature coefficients to zero.
+- Helps in feature selection.
+
+`alpha` controls the strength of regularization. A higher alpha means stronger regularization.
+
+## **Step 11: Train and Evaluate Models**
+
+```
+results = []for name, model in models.items():    model = make_pipeline(StandardScaler(), model)    model.fit(X_train, y_train)    pred = model.predict(X_test)
+```
+
+Explanation:
+
+- `results = []`: Creates an empty list to store evaluation results.
+- `models.items()`: Iterates through each model.
+- `make_pipeline()`: Combines StandardScaler and regression model.
+- `StandardScaler()`: Standardizes input features.
+- `model.fit()`: Trains the model using training data.
+- `model.predict()`: Predicts fare amounts for testing data.
+
+### **Calculate evaluation metrics**
+
+```
+r2 = r2_score(y_test, pred)rmse = np.sqrt(mean_squared_error(y_test, pred))mae = mean_absolute_error(y_test, pred)
+```
+
+**1. R² Score (Coefficient of Determination)**
+
+Measures how well the model explains variations in the target variable.
+
+- 1: Perfect prediction.
+- 0: Model performs like predicting the mean.
+- Negative: Model performs worse than predicting the mean.
+
+Higher R² is generally better.
+
+**2. RMSE (Root Mean Squared Error)**
+
+Measures the average prediction error, giving more weight to large errors.
+
+\\[ RMSE=\sqrt{\frac{\sum(y-\hat y)^2}{n}} \\]
+
+Lower RMSE is better.
+
+**3. MAE (Mean Absolute Error)**
+
+Measures the average absolute difference between actual and predicted values.
+
+\\[ MAE=\frac{\sum|y-\hat y|}{n} \\]
+
+Lower MAE is better.
+
+```
+results.append([name, r2, rmse, mae])
+```
+
+Stores the model name and its evaluation scores in the results list.
+
+## **Step 12: Model Comparison**
+
+```
+result = pd.DataFrame(    results,    columns=["Model", "R2 Score", "RMSE", "MAE"])print("\nModel Comparison:")print(result)
+```
+
+- `pd.DataFrame()`: Converts the results list into a table.
+- `columns`: Assigns column names.
+- `print(result)`: Displays the comparison of all three models.
+
+The output will look similar to this format (illustrative values only):
+
+| Model             | R² Score | RMSE | MAE |
+| ----------------- | -------- | ---- | --- |
+| Linear Regression | 0.65     | 4.5  | 2.8 |
+| Ridge Regression  | 0.65     | 4.5  | 2.8 |
+| Lasso Regression  | 0.64     | 4.6  | 2.9 |
+
+Your actual scores will depend on your dataset and preprocessing.
+
+# **3. Important Viva Questions and Answers**
+
+**1. What is regression analysis?**
+
+Regression analysis is a supervised machine learning technique used to predict continuous numerical values.
+
+**2. What is Uber fare prediction?**
+
+It is a regression problem where we predict the ride fare based on ride-related information.
+
+**3. Which dataset is used in this practical?**
+
+Uber fare dataset (`uber.csv`).
+
+**4. What is the target variable?**
+
+`fare_amount` is the target variable.
+
+**5. What are independent variables?**
+
+The input features used to predict the target, such as passenger count, pickup hour, coordinates, and distance.
+
+**6. What is data preprocessing?**
+
+Data preprocessing is the process of cleaning and preparing raw data before applying machine learning algorithms.
+
+**7. What is an outlier?**
+
+An outlier is a data value that is significantly different from other observations.
+
+**8. What is IQR?**
+
+IQR stands for Interquartile Range. It is the difference between the third quartile and first quartile.
+
+**9. Why do we use a boxplot?**
+
+A boxplot is used to visualize the distribution of data and identify potential outliers.
+
+**10. What is correlation?**
+
+Correlation measures the strength and direction of the relationship between two variables.
+
+**11. What is a heatmap?**
+
+A heatmap is a graphical representation of numerical values using different colors.
+
+**12. What is Linear Regression?**
+
+Linear Regression is an algorithm that predicts continuous values by finding the best-fit linear relationship between input and output variables.
+
+**13. What is Ridge Regression?**
+
+Ridge Regression is Linear Regression with L2 regularization to reduce overfitting.
+
+**14. What is Lasso Regression?**
+
+Lasso Regression is Linear Regression with L1 regularization that can make less important feature coefficients zero.
+
+**15. What is regularization?**
+
+Regularization is a technique used to prevent overfitting by adding a penalty to large model coefficients.
+
+**16. What is StandardScaler?**
+
+StandardScaler transforms data so that each feature has approximately zero mean and unit standard deviation.
+
+**17. What is train-test split?**
+
+It divides the dataset into training and testing parts to train and evaluate a machine learning model.
+
+**18. What is R² Score?**
+
+R² Score measures how well the model explains the variation in the target variable. Higher is generally better.
+
+**19. What is RMSE?**
+
+RMSE stands for Root Mean Squared Error. It measures prediction error, and lower values are better.
+
+**20. What is MAE?**
+
+MAE stands for Mean Absolute Error. It calculates the average absolute difference between actual and predicted values.
+
+# **4. Important Points to Remember**
+
+| Topic          | Important point                  |
+| -------------- | -------------------------------- |
+| Problem type   | Supervised Learning              |
+| Task           | Regression                       |
+| Dataset        | Uber fare dataset                |
+| Target         | `fare_amount`                    |
+| Outlier method | IQR                              |
+| Visualization  | Boxplot and Heatmap              |
+| Scaling        | StandardScaler                   |
+| Models         | Linear, Ridge, Lasso             |
+| Evaluation     | R², RMSE, MAE                    |
+| Best model     | Compare actual evaluation scores |
+
+**One important technical note:** The calculated distance in this code is based on latitude and longitude differences directly, so it is not a true distance in kilometres. Also, the pickup hour is extracted from the datetime, but the original datetime column remains in the dataset and is not selected as a feature.
+
+**Conclusion:** In this practical, we preprocess the Uber dataset, identify and remove fare outliers, analyze correlations, and train three regression models. Finally, we compare their R² Score, RMSE, and MAE to understand which model gives better fare predictions.
+
+
+
+
+
+

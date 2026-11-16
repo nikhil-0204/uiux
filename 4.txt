@@ -1,0 +1,404 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+import seaborn as sns
+
+# 1. Load Dataset
+data = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\Iris.csv")
+
+# 2. Select Features
+X = data.drop(['Id', 'Species'], axis=1)
+
+# 3. Elbow Method
+wcss = []
+
+for k in range(1, 11):
+    model = KMeans(n_clusters=k, random_state=42, n_init=10)
+    model.fit(X)
+    wcss.append(model.inertia_)
+
+# 4. Plot Elbow Graph
+plt.plot(range(1, 11), wcss, marker='o')
+plt.xlabel("Number of Clusters (K)")
+plt.ylabel("WCSS")
+plt.title("Elbow Method")
+plt.show()
+
+# 5. Apply K-Means
+kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+data['Cluster'] = kmeans.fit_predict(X)
+
+# 6. Display Cluster Results
+print(data.head())
+print("Cluster Centers:")
+print(kmeans.cluster_centers_)
+
+# 7. Visualize Clusters
+sns.scatterplot(
+    x=X['SepalLengthCm'],
+    y=X['SepalWidthCm'],
+    hue=data['Cluster'],
+    palette='Set1'
+)
+
+plt.scatter(
+    kmeans.cluster_centers_[:, 0],
+    kmeans.cluster_centers_[:, 1],
+    color='black',
+    marker='X',
+    s=150,
+    label='Centroids'
+)
+
+plt.title("K-Means Clustering")
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.legend()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+# **Clustering Analysis – K-Means Clustering on Iris Dataset**
+
+## **1. Aim / Problem Statement**
+
+To implement the K-Means clustering algorithm on the Iris dataset and determine the optimal number of clusters using the Elbow Method.
+
+In this practical, we will:
+
+1. Load the Iris dataset.
+2. Select the required features.
+3. Determine the optimal number of clusters using the Elbow Method.
+4. Apply K-Means clustering.
+5. Display cluster results and cluster centers.
+6. Visualize the clusters using a scatter plot.
+
+## **2. Explanation of Code Step by Step**
+
+### **Step 1: Import Libraries**
+
+```
+import pandas as pdimport matplotlib.pyplot as pltfrom sklearn.cluster import KMeansimport seaborn as sns
+```
+
+- `pandas`: Used to load and manipulate the dataset.
+- `matplotlib.pyplot`: Used to create graphs.
+- `KMeans`: Implements the K-Means clustering algorithm.
+- `seaborn`: Used to create attractive statistical graphs.
+
+### **Step 2: Load Dataset**
+
+```
+data = pd.read_csv(r"C:\Users\Asus\Downloads\CMPL\Iris.csv")
+```
+
+- `pd.read_csv()`: Loads the Iris dataset from a CSV file.
+- `data`: Stores the dataset in a DataFrame.
+- The `r` before the path indicates a raw string, which handles Windows file paths.
+
+The Iris dataset contains information about three types of iris flowers:
+
+1. Iris-setosa
+2. Iris-versicolor
+3. Iris-virginica
+
+### **Step 3: Select Features**
+
+```
+X = data.drop(['Id', 'Species'], axis=1)
+```
+
+- `X` contains the input features used for clustering.
+- `Id` is removed because it is just a record number.
+- `Species` is removed because K-Means is an unsupervised learning algorithm and does not require class labels.
+- `axis=1` means columns are removed.
+
+The four selected features are:
+
+| Feature       | Meaning             |
+| ------------- | ------------------- |
+| SepalLengthCm | Length of the sepal |
+| SepalWidthCm  | Width of the sepal  |
+| PetalLengthCm | Length of the petal |
+| PetalWidthCm  | Width of the petal  |
+
+### **Step 4: Elbow Method**
+
+```
+wcss = []for k in range(1, 11):    model = KMeans(n_clusters=k, random_state=42, n_init=10)    model.fit(X)    wcss.append(model.inertia_)
+```
+
+**What is the Elbow Method?**
+
+The Elbow Method is used to determine the optimal number of clusters (K) in a dataset.
+
+Explanation:
+
+- `wcss = []`: Creates an empty list to store WCSS values.
+- `range(1, 11)`: Tests cluster numbers from 1 to 10.
+- `n_clusters=k`: Specifies the number of clusters.
+- `random_state=42`: Ensures reproducible results.
+- `n_init=10`: Runs K-Means with 10 different centroid initializations and selects the best result.
+- `model.fit(X)`: Trains the K-Means algorithm on the dataset.
+- `model.inertia_`: Returns the WCSS value.
+- `wcss.append()`: Stores the WCSS value in the list.
+
+**What is WCSS?**
+
+WCSS stands for Within-Cluster Sum of Squares.
+
+It measures the sum of squared distances between data points and their assigned cluster centers.
+
+\\[ WCSS=\sum\_{i=1}^{K}\sum\_{x\in C_i} ||x-\mu_i||^2 \\]
+
+Where:
+
+- K = Number of clusters.
+- \\(C_i\\) = Data points in cluster i.
+- \\(\mu_i\\) = Centroid of cluster i.
+
+Lower WCSS means data points are closer to their cluster centers.
+
+### **Step 5: Plot Elbow Graph**
+
+```
+plt.plot(range(1, 11), wcss, marker='o')plt.xlabel("Number of Clusters (K)")plt.ylabel("WCSS")plt.title("Elbow Method")plt.show()
+```
+
+- `plt.plot()`: Creates a line graph.
+- `range(1, 11)`: Represents the number of clusters.
+- `wcss`: Represents the WCSS values.
+- `marker='o'`: Displays circular markers on the graph.
+- `xlabel()`: Names the X-axis.
+- `ylabel()`: Names the Y-axis.
+- `title()`: Adds the graph title.
+- `show()`: Displays the graph.
+
+[K-means Clustering: Complete Guide with Algorithm, Implementation & Best Practices - Interactive | Michael Brenndoerfer | Michael Brenndoerfer](https://images.openai.com/static-rsc-4/7KyAP-bU3wtlC7c-QVeLJZb1Bo94ga0YknB4Yf_seilBHlIB3PJcg2rAKznqI9bS_6JjJmP8kwX0bGaWz5CeRfbdYG0D2fkHMsVDAb5TiPRaA4EWR6Bv96ODpJ2i4fiubpsADShECmU859pmxKh61u0eohApuKJnYqr1jZbJaUs?purpose=inline)
+
+**How to identify the elbow point?**
+
+- Initially, WCSS decreases rapidly as the number of clusters increases.
+- After a certain point, the decrease becomes slower.
+- The point where the graph looks like an elbow is considered the optimal K.
+
+For the Iris dataset, K = 3 is commonly selected.
+
+### **Step 6: Apply K-Means Clustering**
+
+```
+kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)data['Cluster'] = kmeans.fit_predict(X)
+```
+
+- `KMeans()`: Creates a K-Means clustering model.
+- `n_clusters=3`: Creates three clusters.
+- `random_state=42`: Makes results reproducible.
+- `n_init=10`: Runs 10 centroid initializations.
+- `fit_predict(X)`: Trains the model and assigns a cluster number to each data point.
+- `data['Cluster']`: Stores the assigned cluster number in a new column.
+
+The algorithm groups similar flowers into three clusters based on their measurements.
+
+**Note:** Cluster labels such as 0, 1, and 2 are automatically assigned. They do not necessarily correspond directly to the actual species names.
+
+### **Step 7: Display Cluster Results**
+
+```
+print(data.head())print("Cluster Centers:")print(kmeans.cluster_centers_)
+```
+
+- `data.head()`: Displays the first five records with their assigned cluster.
+- `cluster_centers_`: Displays the center point (centroid) of each cluster.
+
+Since we selected four features, each centroid contains four values:
+
+1. Sepal length
+2. Sepal width
+3. Petal length
+4. Petal width
+
+### **Step 8: Visualize Clusters**
+
+```
+sns.scatterplot(    x=X['SepalLengthCm'],    y=X['SepalWidthCm'],    hue=data['Cluster'],    palette='Set1')
+```
+
+- `sns.scatterplot()`: Creates a scatter plot.
+- `x`: Represents sepal length.
+- `y`: Represents sepal width.
+- `hue`: Assigns different colors to different clusters.
+- `palette='Set1'`: Uses different colors for the clusters.
+
+This graph displays the data points according to their assigned clusters.
+
+### **Step 9: Display Cluster Centroids**
+
+```
+plt.scatter(    kmeans.cluster_centers_[:, 0],    kmeans.cluster_centers_[:, 1],    color='black',    marker='X',    s=150,    label='Centroids')
+```
+
+- `cluster_centers_[:, 0]`: Selects the sepal length coordinate of each centroid.
+- `cluster_centers_[:, 1]`: Selects the sepal width coordinate of each centroid.
+- `color='black'`: Displays centroids in black.
+- `marker='X'`: Uses an X-shaped marker.
+- `s=150`: Sets marker size.
+- `label='Centroids'`: Gives the centroids a legend label.
+
+```
+plt.title("K-Means Clustering")plt.xlabel("Sepal Length")plt.ylabel("Sepal Width")plt.legend()plt.show()
+```
+
+- Adds the graph title.
+- Names the X-axis and Y-axis.
+- `plt.legend()`: Displays cluster and centroid labels.
+- `plt.show()`: Displays the final graph.
+
+**Important:** The model uses all four features for clustering, but the scatter plot displays only two features (sepal length and sepal width).
+
+## **3. Important Concepts**
+
+### **What is Clustering?**
+
+Clustering is an unsupervised machine learning technique used to group similar data points together.
+
+Example: Grouping flowers based on their measurements without providing their species names.
+
+### **What is K-Means?**
+
+K-Means is an unsupervised learning algorithm that divides a dataset into K clusters based on similarity.
+
+[k-means Clustering: Math Explained & Multi-Dimension Implementations | by Salah Assana | Medium](https://images.openai.com/static-rsc-4/h4LvIMKC61jb5JpetOPQMtKAbdlbX0S9TUOO8Ts4-Jd2mAGGW_qHDcEMoEL7N8pBcKcwuD681elSKzj-aaFQr_kBgCb3hBD-FeoaFNt5Gau3N_LmMBNQKyQNycvBxEdy2N0j2CaDOCpm35OqdupITIv3CNrUKoYBynzEYW8rkpA?purpose=inline)
+
+### **How does K-Means work?**
+
+1. Select the number of clusters (K).
+2. Initialize K centroids.
+3. Calculate the distance between each data point and centroids.
+4. Assign each data point to its nearest centroid.
+5. Recalculate the centroid of each cluster.
+6. Repeat until the centroids stop changing significantly.
+
+### **What is a Centroid?**
+
+A centroid is the center point of a cluster. It represents the average position of all data points belonging to that cluster.
+
+### **What is the Elbow Method?**
+
+The Elbow Method helps determine the optimal number of clusters by plotting WCSS against different values of K.
+
+## **4. Important Viva Questions and Answers**
+
+**1. What is clustering?**
+
+Clustering is an unsupervised learning technique used to group similar data points together.
+
+**2. What is K-Means?**
+
+K-Means is an unsupervised machine learning algorithm that divides data into K clusters.
+
+**3. Which dataset is used in this practical?**
+
+The Iris dataset.
+
+**4. How many species are present in the Iris dataset?**
+
+There are three species: Setosa, Versicolor, and Virginica.
+
+**5. What are the features used in the Iris dataset?**
+
+Sepal length, sepal width, petal length, and petal width.
+
+**6. What is the value of K in this practical?**
+
+K = 3.
+
+**7. Why do we use the Elbow Method?**
+
+It is used to find the optimal number of clusters.
+
+**8. What is WCSS?**
+
+WCSS stands for Within-Cluster Sum of Squares. It measures the sum of squared distances between data points and their cluster centroids.
+
+**9. What is a centroid?**
+
+A centroid is the center point of a cluster.
+
+**10. Is K-Means supervised or unsupervised?**
+
+K-Means is an unsupervised learning algorithm.
+
+**11. Why is the Species column removed?**
+
+Because K-Means does not require actual class labels to create clusters.
+
+**12. What is the purpose of random_state=42?**
+
+It ensures reproducible results when the model is executed again.
+
+**13. What is n_init=10?**
+
+It runs the K-Means algorithm 10 times with different initial centroid positions and selects the best result.
+
+**14. What is the purpose of fit_predict()?**
+
+It trains the K-Means model and assigns a cluster number to each data point.
+
+**15. What is the difference between classification and clustering?**
+
+Classification uses labelled data, whereas clustering groups unlabelled data based on similarity.
+
+**16. What is the purpose of cluster_centers\_?**
+
+It returns the coordinates of the centroids of all clusters.
+
+**17. Can K-Means work without specifying K?**
+
+No. We must specify the number of clusters before applying K-Means.
+
+**18. What happens when K is too large?**
+
+The dataset may be divided into too many small clusters.
+
+**19. What is the main limitation of K-Means?**
+
+We must specify K in advance, and the algorithm can be sensitive to outliers and initial centroid positions.
+
+**20. What is the difference between WCSS and centroid?**
+
+WCSS measures the total within-cluster variation, whereas a centroid represents the center of a cluster.
+
+## **5. Important Points to Remember for Practical Exam**
+
+| Topic              | Answer                |
+| ------------------ | --------------------- |
+| Problem type       | Clustering            |
+| Learning type      | Unsupervised Learning |
+| Algorithm          | K-Means               |
+| Dataset            | Iris.csv              |
+| Number of features | 4                     |
+| Number of clusters | 3                     |
+| Method to find K   | Elbow Method          |
+| Evaluation concept | WCSS                  |
+| Cluster center     | Centroid              |
+| Visualization      | Scatter plot          |
+| Python library     | Scikit-learn          |
+
+## **6. Conclusion**
+
+In this practical, we implemented K-Means clustering on the Iris dataset. We used the Elbow Method to determine the optimal number of clusters, selected K = 3, and grouped the flowers based on their measurements. Finally, we displayed the cluster centers and visualized the clusters using a scatter plot.
+
+**Remember these three points for viva:**
+
+- K-Means is an unsupervised learning algorithm.
+- Elbow Method is used to find the optimal K.
+- WCSS measures the variation within clusters.

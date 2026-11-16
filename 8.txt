@@ -1,0 +1,556 @@
+import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+API_KEY = "3fa71547d0c67cee585403dc1420e27e"
+CITY = "Pune"
+url = f"https://api.openweathermap.org/data/2.5/forecast?q={CITY}&appid={API_KEY}&units=metric"
+response = requests.get(url)
+data = response.json()
+if response.status_code == 200:
+    records = []
+    for item in data["list"]:
+        records.append({
+            "Date": item["dt_txt"],
+            "Temperature": item["main"]["temp"],
+            "Humidity": item["main"]["humidity"],
+            "Pressure": item["main"]["pressure"],
+            "Wind Speed": item["wind"]["speed"],
+            "Rain": item.get("rain", {}).get("3h", 0)
+        })
+    weather_df = pd.DataFrame(records)
+    weather_df["Date"] = pd.to_datetime(weather_df["Date"])
+    print("Weather Data")
+    print(weather_df.head())
+    print("\nData Information")
+    print(weather_df.info())
+    print("\nMissing Values")
+    print(weather_df.isnull().sum())
+    weather_df.fillna(0, inplace=True)
+    weather_df.drop_duplicates(inplace=True)
+    print("\nCleaned Data")
+    print(weather_df.head())
+    print("\nStatistics")
+    print("Average Temperature:",
+          weather_df["Temperature"].mean())
+    print("Maximum Temperature:",
+          weather_df["Temperature"].max())
+    print("Minimum Temperature:",
+          weather_df["Temperature"].min())
+    print("Average Humidity:",
+          weather_df["Humidity"].mean())
+    print("Average Wind Speed:",
+          weather_df["Wind Speed"].mean())
+    daily_data = weather_df.set_index("Date").resample("D").agg({
+        "Temperature": "mean",
+        "Humidity": "mean",
+        "Wind Speed": "mean",
+        "Rain": "sum"
+    })
+    print("\nDaily Weather Summary")
+    print(daily_data)
+    plt.figure(figsize=(10, 5))
+    plt.plot(
+        weather_df["Date"],
+        weather_df["Temperature"],
+        marker="o"
+    )
+    plt.title("Temperature Variation")
+    plt.xlabel("Date")
+    plt.ylabel("Temperature (°C)")
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+    plt.figure(figsize=(8, 5))
+    plt.bar(
+        daily_data.index,
+        daily_data["Rain"]
+    )
+    plt.title("Daily Rainfall")
+    plt.xlabel("Date")
+    plt.ylabel("Rainfall (mm)")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+    plt.figure(figsize=(8, 5))
+    plt.scatter(
+        weather_df["Temperature"],
+        weather_df["Humidity"]
+    )
+
+    plt.title("Temperature vs Humidity")
+    plt.xlabel("Temperature (°C)")
+    plt.ylabel("Humidity (%)")
+    plt.show()
+    plt.figure(figsize=(7, 5))
+    sns.heatmap(
+        weather_df[
+            ["Temperature", "Humidity", "Pressure",
+             "Wind Speed", "Rain"]
+        ].corr(),
+        annot=True
+    )
+    plt.title("Weather Correlation Heatmap")
+    plt.show()
+    latitude = data["city"]["coord"]["lat"]
+    longitude = data["city"]["coord"]["lon"]
+    print("\nGeographical Information")
+    print("City:", CITY)
+    print("Latitude:", latitude)
+    print("Longitude:", longitude)
+else:
+    print("Error:", data)
+
+
+
+
+
+
+
+
+# **Experiment: Interacting with Web APIs – Weather Data Analysis Using OpenWeatherMap**
+
+## **1. Aim of the experiment**
+
+To retrieve weather data from the OpenWeatherMap API for a specific city, clean and analyze the data, calculate weather statistics, and visualize weather patterns using Python.
+
+## **2. Importing libraries**
+
+```
+import requestsimport pandas as pdimport matplotlib.pyplot as pltimport seaborn as sns
+```
+
+- `requests`: Used to send HTTP requests and communicate with web APIs.
+- `pandas`: Used for data handling and analysis.
+- `matplotlib`: Used to create graphs.
+- `seaborn`: Used to create statistical visualizations like heatmaps.
+
+## **3. Setting API key and city**
+
+```
+API_KEY = "YOUR_API_KEY"CITY = "Pune"
+```
+
+- `API_KEY` stores the API key obtained from OpenWeatherMap.
+- `CITY` specifies the location for which we want weather data.
+
+Note: Keep your API key private. If the key you shared is real, regenerate it and use the new key privately.
+
+## **4. Creating API URL**
+
+```
+url = f"https://api.openweathermap.org/data/2.5/forecast?q={CITY}&appid={API_KEY}&units=metric"
+```
+
+This creates the API URL to request weather forecast data.
+
+- `forecast`: Requests forecast information.
+- `q={CITY}`: Specifies the city.
+- `appid={API_KEY}`: Sends the API key.
+- `units=metric`: Returns temperature in Celsius.
+
+## **5. Sending API request**
+
+```
+response = requests.get(url)data = response.json()
+```
+
+- `requests.get(url)` sends a GET request to the API.
+- `response` stores the server's response.
+- `response.json()` converts the response into Python dictionary/list data.
+
+## **6. Checking API response**
+
+```
+if response.status_code == 200:
+```
+
+- Checks whether the API request was successful.
+- Status code `200` means the request was successful.
+- If the request fails, the `else` block displays the error.
+
+## **7. Creating an empty list**
+
+```
+records = []
+```
+
+Creates an empty list to store the extracted weather records.
+
+## **8. Extracting weather information**
+
+```
+for item in data["list"]:    records.append({        "Date": item["dt_txt"],        "Temperature": item["main"]["temp"],        "Humidity": item["main"]["humidity"],        "Pressure": item["main"]["pressure"],        "Wind Speed": item["wind"]["speed"],        "Rain": item.get("rain", {}).get("3h", 0)    })
+```
+
+- `for item in data["list"]`: Iterates through each forecast record.
+- `records.append()`: Adds extracted information to the list.
+- `dt_txt`: Date and time of forecast.
+- `temp`: Temperature in Celsius.
+- `humidity`: Humidity percentage.
+- `pressure`: Atmospheric pressure in hPa.
+- `wind["speed"]`: Wind speed in metres per second.
+- `rain`: Rainfall amount over three hours, if available.
+- `get("rain", {})`: Returns an empty dictionary if rainfall information is missing.
+- `get("3h", 0)`: Returns zero if the three-hour rainfall value is missing.
+
+## **9. Converting data into DataFrame**
+
+```
+weather_df = pd.DataFrame(records)
+```
+
+Converts the extracted weather records into a Pandas DataFrame.
+
+A DataFrame displays data in rows and columns.
+
+## **10. Converting date into datetime format**
+
+```
+weather_df["Date"] = pd.to_datetime(weather_df["Date"])
+```
+
+Converts the Date column into datetime format.
+
+This helps perform date-based operations such as daily and monthly analysis.
+
+## **11. Displaying weather data**
+
+```
+print("Weather Data")print(weather_df.head())
+```
+
+- `head()` displays the first five weather records.
+- It helps us understand the retrieved data.
+
+## **12. Checking dataset information**
+
+```
+print(weather_df.info())
+```
+
+Displays:
+
+- Number of rows and columns.
+- Column names.
+- Data types.
+- Non-null values.
+- Memory usage.
+
+## **13. Checking missing values**
+
+```
+print(weather_df.isnull().sum())
+```
+
+- `isnull()` identifies missing values.
+- `sum()` counts missing values in each column.
+
+## **14. Handling missing values**
+
+```
+weather_df.fillna(0, inplace=True)
+```
+
+Replaces missing values with zero.
+
+`inplace=True` modifies the original DataFrame.
+
+## **15. Removing duplicate records**
+
+```
+weather_df.drop_duplicates(inplace=True)
+```
+
+Removes repeated rows from the dataset.
+
+## **16. Displaying cleaned data**
+
+```
+print(weather_df.head())
+```
+
+Displays the first five rows after cleaning.
+
+## **17. Calculating weather statistics**
+
+```
+print("Average Temperature:",      weather_df["Temperature"].mean())
+```
+
+Calculates the average temperature.
+
+```
+print("Maximum Temperature:",      weather_df["Temperature"].max())
+```
+
+Finds the highest temperature.
+
+```
+print("Minimum Temperature:",      weather_df["Temperature"].min())
+```
+
+Finds the lowest temperature.
+
+```
+print("Average Humidity:",      weather_df["Humidity"].mean())
+```
+
+Calculates average humidity.
+
+```
+print("Average Wind Speed:",      weather_df["Wind Speed"].mean())
+```
+
+Calculates average wind speed.
+
+Important functions:
+
+- `mean()` – Calculates average.
+- `max()` – Finds maximum value.
+- `min()` – Finds minimum value.
+
+## **18. Daily weather aggregation**
+
+```
+daily_data = weather_df.set_index("Date").resample("D").agg({    "Temperature": "mean",    "Humidity": "mean",    "Wind Speed": "mean",    "Rain": "sum"})
+```
+
+This code groups weather data by day and calculates daily statistics.
+
+Explanation:
+
+- `set_index("Date")`: Sets Date as the DataFrame index.
+- `resample("D")`: Groups data into daily intervals.
+- `agg()`: Applies different calculations to different columns.
+- `"mean"`: Calculates daily average.
+- `"sum"`: Calculates total daily rainfall.
+
+For example:
+
+| Date  | Average Temp | Average Humidity | Total Rain |
+| ----- | ------------ | ---------------- | ---------- |
+| Day 1 | 28°C         | 65%              | 5 mm       |
+| Day 2 | 30°C         | 60%              | 2 mm       |
+
+## **19. Temperature variation – Line chart**
+
+```
+plt.figure(figsize=(10, 5))plt.plot(    weather_df["Date"],    weather_df["Temperature"],    marker="o")plt.title("Temperature Variation")plt.xlabel("Date")plt.ylabel("Temperature (°C)")plt.xticks(rotation=45)plt.grid(True)plt.tight_layout()plt.show()
+```
+
+Explanation:
+
+- `figure()` sets graph size.
+- `plot()` creates a line chart.
+- `marker="o"` displays circular markers.
+- `title()` sets graph title.
+- `xlabel()` and `ylabel()` label the axes.
+- `xticks(rotation=45)` rotates date labels.
+- `grid(True)` displays grid lines.
+- `tight_layout()` adjusts spacing.
+- `show()` displays the graph.
+
+Purpose: Shows how temperature changes over time.
+
+## **20. Daily rainfall – Bar chart**
+
+```
+plt.figure(figsize=(8, 5))plt.bar(    daily_data.index,    daily_data["Rain"])plt.title("Daily Rainfall")plt.xlabel("Date")plt.ylabel("Rainfall (mm)")plt.xticks(rotation=45)plt.tight_layout()plt.show()
+```
+
+- `bar()` creates a bar chart.
+- `daily_data.index` represents dates.
+- `daily_data["Rain"]` represents daily rainfall.
+
+Purpose: Compares rainfall amounts across different days.
+
+## **21. Temperature vs Humidity – Scatter plot**
+
+```
+plt.figure(figsize=(8, 5))plt.scatter(    weather_df["Temperature"],    weather_df["Humidity"])plt.title("Temperature vs Humidity")plt.xlabel("Temperature (°C)")plt.ylabel("Humidity (%)")plt.show()
+```
+
+- `scatter()` creates a scatter plot.
+- X-axis represents temperature.
+- Y-axis represents humidity.
+
+Purpose: Helps understand the relationship between temperature and humidity.
+
+## **22. Correlation heatmap**
+
+```
+plt.figure(figsize=(7, 5))sns.heatmap(    weather_df[        ["Temperature", "Humidity", "Pressure",         "Wind Speed", "Rain"]    ].corr(),    annot=True)plt.title("Weather Correlation Heatmap")plt.show()
+```
+
+Explanation:
+
+- `sns.heatmap()` creates a heatmap.
+- `.corr()` calculates correlation between numerical columns.
+- `annot=True` displays correlation values inside the boxes.
+- The heatmap helps identify positive and negative relationships.
+
+Correlation values range from -1 to +1:
+
+- `+1`: Perfect positive correlation.
+- `-1`: Perfect negative correlation.
+- `0`: No linear correlation.
+
+## **23. Geographical information**
+
+```
+latitude = data["city"]["coord"]["lat"]longitude = data["city"]["coord"]["lon"]
+```
+
+Extracts the geographical coordinates of the selected city.
+
+```
+print("\nGeographical Information")print("City:", CITY)print("Latitude:", latitude)print("Longitude:", longitude)
+```
+
+Displays:
+
+- City name.
+- Latitude.
+- Longitude.
+
+Latitude and longitude help identify the geographical location of a city.
+
+## **24. Handling API errors**
+
+```
+else:    print("Error:", data)
+```
+
+If the API request is unsuccessful, this block displays the error response.
+
+Common HTTP status codes:
+
+- `200`: Successful request.
+- `401`: Invalid API key.
+- `404`: City not found.
+- `429`: Too many API requests.
+
+# **Important Viva Questions and Answers**
+
+1\. What is an API?
+
+API stands for Application Programming Interface. It allows two software applications to communicate with each other.
+
+2\. What is OpenWeatherMap?
+
+OpenWeatherMap is an online weather service that provides weather information through APIs.
+
+3\. What is an API key?
+
+An API key is a unique code used to authenticate and authorize API requests.
+
+4\. Which library is used to access the API?
+
+The Requests library.
+
+5\. What is a GET request?
+
+A GET request is used to retrieve data from a server.
+
+6\. What is JSON?
+
+JSON stands for JavaScript Object Notation. It stores and exchanges data in key-value format.
+
+7\. What is `requests.get()`?
+
+It sends an HTTP GET request to a specified URL.
+
+8\. What is `response.json()`?
+
+It converts the API response into Python data structures.
+
+9\. What does status code 200 mean?
+
+It means the API request was successful.
+
+10\. What is `pd.DataFrame()`?
+
+It converts data into a Pandas DataFrame.
+
+11\. What is `pd.to_datetime()`?
+
+It converts values into datetime format.
+
+12\. What is `fillna()`?
+
+It replaces missing values with a specified value.
+
+13\. What is `drop_duplicates()`?
+
+It removes duplicate records.
+
+14\. What is `resample()`?
+
+It groups time-series data into specific time intervals, such as daily or monthly.
+
+15\. What is `agg()`?
+
+It applies different aggregation functions to columns.
+
+16\. What is correlation?
+
+Correlation measures the relationship between two numerical variables.
+
+17\. What is a heatmap?
+
+A heatmap represents numerical values using different color intensities.
+
+18\. What is a scatter plot?
+
+A scatter plot displays the relationship between two numerical variables.
+
+19\. What is latitude and longitude?
+
+Latitude and longitude are geographical coordinates used to identify a location.
+
+20\. What is the difference between a line chart and a bar chart?
+
+A line chart shows trends over time, while a bar chart compares values between categories.
+
+21\. What is Seaborn?
+
+Seaborn is a Python library used for statistical data visualization.
+
+22\. What is the unit of temperature?
+
+Celsius (°C), because the API URL uses metric units.
+
+23\. What is the unit of wind speed?
+
+Metres per second (m/s).
+
+24\. What is the unit of atmospheric pressure?
+
+Hectopascal (hPa).
+
+25\. What does `rain.get("3h", 0)` mean?
+
+It retrieves the rainfall value for the last three hours or returns zero if the value is unavailable.
+
+# **Most Important Questions to Prepare First**
+
+1. What is an API?
+2. What is OpenWeatherMap?
+3. What is an API key?
+4. What is the use of Requests library?
+5. What is `requests.get()`?
+6. What is `response.json()`?
+7. What does status code 200 mean?
+8. What is `resample()`?
+9. What is `agg()`?
+10. What is correlation and heatmap?
+11. What is the difference between line chart, bar chart, and scatter plot?
+12. What are latitude and longitude?
+
+**Short practical explanation for the examiner:**
+
+"In this experiment, I used the OpenWeatherMap API to retrieve weather forecast data for Pune. I used the Requests library to send an API request and Pandas to store the data in a DataFrame. I extracted temperature, humidity, pressure, wind speed, and rainfall. Then I cleaned the data, calculated weather statistics, and performed daily aggregation. Finally, I visualized the weather information using line charts, bar charts, scatter plots, and a correlation heatmap."
+
+**Important note:** The OpenWeatherMap 5-day forecast API normally returns forecasts at 3-hour intervals, not actual historical observations. Your program analyzes forecast data, so describe it as forecast analysis rather than historical weather analysis. Also, rainfall values are in millimetres for the preceding three hours when supplied by the API.

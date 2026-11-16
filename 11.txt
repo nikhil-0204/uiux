@@ -1,0 +1,479 @@
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# ==========================================================
+# 1. LOAD DATASET
+# ==========================================================
+
+df = pd.read_csv("city_day.csv")
+
+print("First 5 Records:")
+print(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+print("\nDataset Information:")
+df.info()
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+
+# ==========================================================
+# 2. DATE CONVERSION
+# ==========================================================
+
+df["Date"] = pd.to_datetime(
+    df["Date"],
+    format="%Y-%m-%d"
+)
+
+print("\nDate Converted Successfully!")
+
+
+# ==========================================================
+# 3. SUMMARY STATISTICS
+# ==========================================================
+
+print("\nSummary Statistics:")
+print(df.describe())
+
+
+# ==========================================================
+# 4. AQI TREND OVER TIME
+# ==========================================================
+
+plt.figure(figsize=(10, 5))
+
+plt.plot(
+    df["Date"],
+    df["AQI"],
+    marker="o"
+)
+
+plt.title("AQI Trend Over Time")
+plt.xlabel("Date")
+plt.ylabel("AQI")
+
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+# ==========================================================
+# 5. POLLUTANT LEVELS OVER TIME
+# ==========================================================
+
+plt.figure(figsize=(10, 5))
+
+plt.plot(df["Date"], df["PM2.5"], label="PM2.5")
+plt.plot(df["Date"], df["PM10"], label="PM10")
+plt.plot(df["Date"], df["CO"], label="CO")
+
+plt.title("Pollutant Levels Over Time")
+plt.xlabel("Date")
+plt.ylabel("Pollutant Level")
+
+plt.legend()
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+# ==========================================================
+# 6. AQI COMPARISON BY DATE
+# ==========================================================
+
+plt.figure(figsize=(10, 5))
+
+plt.bar(df["Date"], df["AQI"])
+
+plt.title("AQI Comparison by Date")
+plt.xlabel("Date")
+plt.ylabel("AQI")
+
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+
+# ==========================================================
+# 7. AQI DISTRIBUTION USING BOXPLOT
+# ==========================================================
+
+plt.figure(figsize=(7, 5))
+
+plt.boxplot(df["AQI"].dropna())
+
+plt.title("AQI Distribution")
+plt.ylabel("AQI")
+
+plt.show()
+
+
+# ==========================================================
+# 8. PM2.5 VS AQI
+# ==========================================================
+
+plt.figure(figsize=(8, 5))
+
+plt.scatter(df["PM2.5"], df["AQI"])
+
+plt.title("PM2.5 vs AQI")
+plt.xlabel("PM2.5")
+plt.ylabel("AQI")
+
+plt.grid(True)
+plt.show()
+
+
+# ==========================================================
+# 9. PM10 VS AQI
+# ==========================================================
+
+plt.figure(figsize=(8, 5))
+
+plt.scatter(df["PM10"], df["AQI"])
+
+plt.title("PM10 vs AQI")
+plt.xlabel("PM10")
+plt.ylabel("AQI")
+
+plt.grid(True)
+plt.show()
+
+
+# ==========================================================
+# 10. CO VS AQI
+# ==========================================================
+
+plt.figure(figsize=(8, 5))
+
+plt.scatter(df["CO"], df["AQI"])
+
+plt.title("CO vs AQI")
+plt.xlabel("CO")
+plt.ylabel("AQI")
+
+plt.grid(True)
+plt.show()
+
+
+
+
+
+
+
+
+# **Data Visualization Using Matplotlib – Air Quality Index (AQI)**
+
+**Problem Statement:** Analyzing Air Quality Index (AQI) Trends in a City.
+
+**Objective:** To analyze air pollution data and visualize AQI trends, pollutant levels, AQI distribution, and relationships between pollutants and AQI using Matplotlib.
+
+Your code covers all the major tasks in the practical. Let's understand it step by step in simple language.
+
+## **1. Import libraries**
+
+```
+import pandas as pdimport matplotlib.pyplot as plt
+```
+
+- `pandas`: Used to load and analyze the dataset.
+- `matplotlib.pyplot`: Used to create graphs and visualizations.
+
+## **2. Load dataset**
+
+```
+df = pd.read_csv("city_day.csv")
+```
+
+Loads the air quality dataset into a DataFrame.
+
+```
+print(df.head())
+```
+
+Displays the first five records.
+
+```
+print(df.shape)
+```
+
+Displays the number of rows and columns.
+
+```
+print(df.columns.tolist())
+```
+
+Displays all column names.
+
+```
+df.info()
+```
+
+Displays column names, data types, and non-null values.
+
+```
+print(df.isnull().sum())
+```
+
+Displays the number of missing values in each column.
+
+## **3. Date conversion**
+
+```
+df["Date"] = pd.to_datetime(    df["Date"],    format="%Y-%m-%d")
+```
+
+Converts the Date column into Pandas datetime format.
+
+- `pd.to_datetime()`: Converts text into date format.
+- `%Y`: Year.
+- `%m`: Month.
+- `%d`: Day.
+
+Date conversion is important for creating time-based graphs.
+
+## **4. Summary statistics**
+
+```
+print(df.describe())
+```
+
+Displays statistical information about numerical columns.
+
+It includes:
+
+- `count`: Number of available values.
+- `mean`: Average value.
+- `std`: Standard deviation.
+- `min`: Minimum value.
+- `25%`: First quartile.
+- `50%`: Median.
+- `75%`: Third quartile.
+- `max`: Maximum value.
+
+## **5. AQI trend over time – Line plot**
+
+```
+plt.figure(figsize=(10, 5))plt.plot(    df["Date"],    df["AQI"],    marker="o")plt.title("AQI Trend Over Time")plt.xlabel("Date")plt.ylabel("AQI")plt.xticks(rotation=45)plt.grid(True)plt.tight_layout()plt.show()
+```
+
+This graph shows how the Air Quality Index changes over time.
+
+Explanation:
+
+- `plt.figure()`: Creates a new figure.
+- `figsize=(10,5)`: Sets the graph size.
+- `plt.plot()`: Creates a line graph.
+- `marker="o"`: Displays circular markers on data points.
+- `plt.title()`: Adds a graph title.
+- `plt.xlabel()`: Adds the X-axis label.
+- `plt.ylabel()`: Adds the Y-axis label.
+- `plt.xticks(rotation=45)`: Rotates date labels by 45 degrees.
+- `plt.grid(True)`: Displays grid lines.
+- `plt.tight_layout()`: Adjusts spacing.
+- `plt.show()`: Displays the graph.
+
+**Purpose:** To identify whether air quality is improving or becoming worse over time.
+
+## **6. Pollutant levels over time – Line plot**
+
+```
+plt.figure(figsize=(10, 5))plt.plot(df["Date"], df["PM2.5"], label="PM2.5")plt.plot(df["Date"], df["PM10"], label="PM10")plt.plot(df["Date"], df["CO"], label="CO")plt.title("Pollutant Levels Over Time")plt.xlabel("Date")plt.ylabel("Pollutant Level")plt.legend()plt.xticks(rotation=45)plt.grid(True)plt.tight_layout()plt.show()
+```
+
+This graph displays the changes in different pollutant levels over time.
+
+- `PM2.5`: Fine particulate matter with a diameter of 2.5 micrometres or less.
+- `PM10`: Particulate matter with a diameter of 10 micrometres or less.
+- `CO`: Carbon monoxide.
+
+Important functions:
+
+- `plt.plot()`: Creates line graphs.
+- `label`: Assigns names to each line.
+- `plt.legend()`: Displays the names of the lines.
+
+**Purpose:** To compare the pollution levels of PM2.5, PM10, and CO over time.
+
+## **7. AQI comparison by date – Bar plot**
+
+```
+plt.figure(figsize=(10, 5))plt.bar(df["Date"], df["AQI"])plt.title("AQI Comparison by Date")plt.xlabel("Date")plt.ylabel("AQI")plt.xticks(rotation=45)plt.tight_layout()plt.show()
+```
+
+This graph compares AQI values across different dates.
+
+- `plt.bar()`: Creates a bar graph.
+- X-axis: Date.
+- Y-axis: AQI value.
+
+**Purpose:** To compare air quality on different dates.
+
+## **8. AQI distribution – Box plot**
+
+```
+plt.figure(figsize=(7, 5))plt.boxplot(df["AQI"].dropna())plt.title("AQI Distribution")plt.ylabel("AQI")plt.show()
+```
+
+This graph shows the distribution of AQI values.
+
+- `plt.boxplot()`: Creates a box plot.
+- `dropna()`: Removes missing AQI values before plotting.
+- `plt.title()`: Adds the graph title.
+
+A box plot displays:
+
+- Minimum value (excluding outliers).
+- First quartile (Q1).
+- Median (Q2).
+- Third quartile (Q3).
+- Maximum value (excluding outliers).
+- Outliers as individual points.
+
+**Purpose:** To understand the spread of AQI values and identify unusually high or low values.
+
+## **9. PM2.5 vs AQI – Scatter plot**
+
+```
+plt.figure(figsize=(8, 5))plt.scatter(df["PM2.5"], df["AQI"])plt.title("PM2.5 vs AQI")plt.xlabel("PM2.5")plt.ylabel("AQI")plt.grid(True)plt.show()
+```
+
+Creates a scatter plot to show the relationship between PM2.5 and AQI.
+
+- `plt.scatter()`: Creates a scatter plot.
+- X-axis: PM2.5 values.
+- Y-axis: AQI values.
+
+**Purpose:** To understand how PM2.5 levels are associated with AQI.
+
+## **10. PM10 vs AQI – Scatter plot**
+
+```
+plt.figure(figsize=(8, 5))plt.scatter(df["PM10"], df["AQI"])plt.title("PM10 vs AQI")plt.xlabel("PM10")plt.ylabel("AQI")plt.grid(True)plt.show()
+```
+
+Creates a scatter plot to analyze the relationship between PM10 and AQI.
+
+**Purpose:** To understand how PM10 concentration changes in relation to AQI.
+
+## **11. CO vs AQI – Scatter plot**
+
+```
+plt.figure(figsize=(8, 5))plt.scatter(df["CO"], df["AQI"])plt.title("CO vs AQI")plt.xlabel("CO")plt.ylabel("AQI")plt.grid(True)plt.show()
+```
+
+Creates a scatter plot to analyze the relationship between carbon monoxide and AQI.
+
+**Purpose:** To understand how CO levels are associated with AQI.
+
+## **Important Viva Questions and Answers**
+
+**1. What is data visualization?**
+
+Data visualization is the graphical representation of data using charts and graphs.
+
+**2. What is Matplotlib?**
+
+Matplotlib is a Python library used to create graphs and visualizations.
+
+**3. What is Pandas?**
+
+Pandas is a Python library used for data manipulation and analysis.
+
+**4. What is AQI?**
+
+AQI stands for Air Quality Index. It indicates the level of air pollution.
+
+**5. What is PM2.5?**
+
+PM2.5 refers to fine particulate matter with a diameter of 2.5 micrometres or less.
+
+**6. What is PM10?**
+
+PM10 refers to particulate matter with a diameter of 10 micrometres or less.
+
+**7. What is CO?**
+
+CO stands for Carbon Monoxide. It is a harmful air pollutant.
+
+**8. What is a line plot?**
+
+A line plot represents data points connected by lines and is useful for showing trends over time.
+
+**9. What is a bar plot?**
+
+A bar plot uses rectangular bars to compare different values.
+
+**10. What is a box plot?**
+
+A box plot represents the distribution of numerical data and helps identify outliers.
+
+**11. What is a scatter plot?**
+
+A scatter plot displays individual data points to show the relationship between two variables.
+
+**12. What is&#x20;**`plt.show()`**?**
+
+It displays the created graph.
+
+**13. What is&#x20;**`plt.xlabel()`**?**
+
+It sets the label of the X-axis.
+
+**14. What is&#x20;**`plt.ylabel()`**?**
+
+It sets the label of the Y-axis.
+
+**15. What is&#x20;**`plt.legend()`**?**
+
+It displays labels that identify different lines or data series in a graph.
+
+**16. What is&#x20;**`figsize`**?**
+
+It specifies the width and height of a graph.
+
+**17. What is&#x20;**`plt.grid(True)`**?**
+
+It displays grid lines in the graph.
+
+**18. What is&#x20;**`pd.to_datetime()`**?**
+
+It converts date values into Pandas datetime format.
+
+**19. What is the purpose of&#x20;**`dropna()`**?**
+
+It removes missing values.
+
+**20. Why do we use scatter plots?**
+
+We use scatter plots to understand the relationship between two numerical variables.
+
+## **Important points to remember for practical exam**
+
+1. Dataset: `city_day.csv`.
+2. Libraries: Pandas and Matplotlib.
+3. Main variable: AQI.
+4. Date conversion: `pd.to_datetime()`.
+5. Line plot: Shows AQI trends over time.
+6. Bar plot: Compares AQI across dates.
+7. Box plot: Shows AQI distribution and outliers.
+8. Scatter plot: Shows relationships between pollutants and AQI.
+9. `plt.legend()`: Displays labels.
+10. `plt.show()`: Displays graphs.
+
+**Practical conclusion:**
+
+The air quality dataset was analyzed using Matplotlib. Line plots were used to visualize AQI and pollutant trends, bar plots compared AQI across dates, box plots showed AQI distribution, and scatter plots helped analyze relationships between AQI and different pollutants.
+
+**One important note:** Your practical statement mentions `City_Air_Quality.csv`, but your code uses `city_day.csv`. Make sure you use the correct filename. Also, your code plots AQI and pollutants but does not explicitly clean missing values; missing values may cause gaps in the graphs.

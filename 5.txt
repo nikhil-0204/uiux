@@ -1,0 +1,413 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sn
+
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Load dataset
+digits = load_digits()
+
+# Display first 4 handwritten digit images
+plt.gray()
+for i in range(4):
+    plt.matshow(digits.images[i])
+    plt.show()
+
+# Convert dataset into DataFrame
+df = pd.DataFrame(digits.data)
+df['target'] = digits.target
+
+# Separate input and output
+X = df.drop('target', axis='columns')
+y = df.target
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Create Random Forest model
+model = RandomForestClassifier(n_estimators=20, random_state=42)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Predict digits
+y_predicted = model.predict(X_test)
+
+# Calculate accuracy
+print("Accuracy:", accuracy_score(y_test, y_predicted))
+
+# Confusion matrix
+cm = confusion_matrix(y_test, y_predicted)
+
+# Display confusion matrix
+plt.figure(figsize=(10, 7))
+sn.heatmap(cm, annot=True, fmt='d')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+
+
+
+
+
+
+
+# **Classification Analysis – Handwritten Digit Recognition Using Random Forest**
+
+## **1. Aim / Problem Statement**
+
+To implement the Random Forest Classification algorithm on the handwritten digits dataset and classify handwritten images into numerical classes from 0 to 9.
+
+In this practical, we will:
+
+1. Load the handwritten digits dataset.
+2. Display sample handwritten digit images.
+3. Convert the dataset into a DataFrame.
+4. Separate input features and output labels.
+5. Split the dataset into training and testing data.
+6. Train a Random Forest classifier.
+7. Predict handwritten digits.
+8. Evaluate the model using accuracy and a confusion matrix.
+
+## **2. Explanation of Code Step by Step**
+
+### **Step 1: Import Libraries**
+
+```
+import pandas as pdimport matplotlib.pyplot as pltimport seaborn as sn
+```
+
+- `pandas`: Used to load and manipulate data.
+- `matplotlib.pyplot`: Used to display images and graphs.
+- `seaborn`: Used to create statistical visualizations, such as the confusion matrix heatmap.
+
+```
+from sklearn.datasets import load_digitsfrom sklearn.model_selection import train_test_splitfrom sklearn.ensemble import RandomForestClassifierfrom sklearn.metrics import confusion_matrix, accuracy_score
+```
+
+- `load_digits`: Loads the handwritten digits dataset.
+- `train_test_split`: Splits the dataset into training and testing data.
+- `RandomForestClassifier`: Implements the Random Forest classification algorithm.
+- `confusion_matrix`: Creates a table to compare actual and predicted classes.
+- `accuracy_score`: Calculates the accuracy of the model.
+
+### **Step 2: Load Dataset**
+
+```
+digits = load_digits()
+```
+
+- Loads the built-in handwritten digits dataset from Scikit-learn.
+- The dataset contains handwritten images of digits from 0 to 9.
+- Each image has a size of 8 × 8 pixels.
+- There are 1797 total images in this dataset.
+
+### **Step 3: Display First 4 Handwritten Digit Images**
+
+```
+plt.gray()for i in range(4):    plt.matshow(digits.images[i])    plt.show()
+```
+
+Explanation:
+
+- `plt.gray()`: Sets the image display to grayscale.
+- `for i in range(4)`: Repeats the process four times.
+- `digits.images[i]`: Selects the image at index i.
+- `plt.matshow()`: Displays the image as a matrix.
+- `plt.show()`: Displays the image.
+
+This step displays the first four handwritten digit images.
+
+### **Step 4: Convert Dataset into DataFrame**
+
+```
+df = pd.DataFrame(digits.data)df['target'] = digits.target
+```
+
+- `pd.DataFrame()`: Converts the dataset into a Pandas DataFrame.
+- `digits.data`: Contains pixel values of handwritten images.
+- `df['target']`: Creates a new column called target.
+- `digits.target`: Contains the actual digit labels from 0 to 9.
+
+**Important:** Each image contains 64 pixels, so each image is represented by 64 features.
+
+### **Step 5: Separate Input and Output**
+
+```
+X = df.drop('target', axis='columns')y = df.target
+```
+
+- `X`: Contains input features (64 pixel values).
+- `y`: Contains output labels (digits from 0 to 9).
+- `drop()`: Removes the target column from the input dataset.
+- `axis='columns'`: Indicates that a column is being removed.
+
+Here, the model uses pixel values to predict the handwritten digit.
+
+### **Step 6: Split Dataset**
+
+```
+X_train, X_test, y_train, y_test = train_test_split(    X, y, test_size=0.2, random_state=42)
+```
+
+Divides the dataset into training and testing data.
+
+- `X_train`: Input data for training.
+- `X_test`: Input data for testing.
+- `y_train`: Actual output labels for training.
+- `y_test`: Actual output labels for testing.
+- `test_size=0.2`: Uses 20% of the data for testing and 80% for training.
+- `random_state=42`: Ensures reproducible splitting.
+
+For 1797 images, approximately:
+
+- Training data: 1437 images.
+- Testing data: 360 images.
+
+### **Step 7: Create Random Forest Model**
+
+```
+model = RandomForestClassifier(n_estimators=20, random_state=42)
+```
+
+- `RandomForestClassifier`: Creates a Random Forest classification model.
+- `n_estimators=20`: Creates 20 decision trees.
+- `random_state=42`: Ensures reproducible results.
+
+**What is Random Forest?**
+
+Random Forest is a supervised machine learning algorithm that combines multiple decision trees to make predictions.
+
+[Core Algorithms You Should Know in Classification | by Jwizzed | Medium](https://images.openai.com/static-rsc-4/x3BTAveCWU-jYAwVPvxnQgK6HQvt_xt9RFWP3UCXF8qnyDjC3jkB0DxfNS5Eo5oonHyk5qjay3EULrJwrLJ33gRPA7QkQcXiNMZ4VNO47ZpZ7qzgB4iOC123xznAVE-UJcTzd1TmapHzIGHyUBEkxIOOM4lo0S_o_0XH1aY1T3s?purpose=inline)
+
+It works as follows:
+
+1. Creates multiple decision trees.
+2. Each tree makes a prediction.
+3. All tree predictions are combined.
+4. The majority voting result becomes the final predicted class.
+
+For example, if 20 trees predict a digit:
+
+- 15 trees predict 5.
+- 3 trees predict 6.
+- 2 trees predict 8.
+
+The final prediction will be 5.
+
+### **Step 8: Train Model**
+
+```
+model.fit(X_train, y_train)
+```
+
+- `fit()` trains the Random Forest model.
+- It learns patterns from the training images and their corresponding labels.
+- The model uses these patterns to recognize handwritten digits.
+
+### **Step 9: Predict Digits**
+
+```
+y_predicted = model.predict(X_test)
+```
+
+- `predict()` predicts the digit classes for testing data.
+- `X_test` contains unseen handwritten digit images.
+- `y_predicted` stores the predicted digit values from 0 to 9.
+
+### **Step 10: Calculate Accuracy**
+
+```
+print("Accuracy:", accuracy_score(y_test, y_predicted))
+```
+
+- `accuracy_score()` compares actual labels with predicted labels.
+- It calculates the percentage of correctly classified images.
+
+Formula:
+
+\\[ Accuracy = \frac{\text{Correct Predictions}}{\text{Total Predictions}} \times 100 \\]
+
+Higher accuracy indicates better classification performance.
+
+### **Step 11: Create Confusion Matrix**
+
+```
+cm = confusion_matrix(y_test, y_predicted)
+```
+
+- `confusion_matrix()` compares actual and predicted classes.
+- It creates a table showing correct and incorrect predictions.
+- `cm` stores the confusion matrix.
+
+Since there are 10 digit classes, the confusion matrix will have 10 rows and 10 columns.
+
+### **Step 12: Display Confusion Matrix**
+
+```
+plt.figure(figsize=(10, 7))sn.heatmap(cm, annot=True, fmt='d')plt.xlabel('Predicted')plt.ylabel('Actual')plt.title('Confusion Matrix')plt.show()
+```
+
+Explanation:
+
+- `plt.figure(figsize=(10, 7))`: Sets the size of the graph.
+- `sn.heatmap()`: Displays the confusion matrix using colors.
+- `annot=True`: Displays numerical values inside each cell.
+- `fmt='d'`: Displays values as integers.
+- `plt.xlabel()`: Labels the X-axis as Predicted.
+- `plt.ylabel()`: Labels the Y-axis as Actual.
+- `plt.title()`: Adds the graph title.
+- `plt.show()`: Displays the confusion matrix.
+
+**How to understand the confusion matrix?**
+
+[Recognizing hand-written digits — scikit-learn 1.9.1 documentation](https://images.openai.com/static-rsc-4/Wsayof1hngrh7xqvH2ggTQRCTbz7G7OfbyJwkBFEefVmFvu-ZON3k7ZL4FWJScE8FYvXit2zcRaAJnSzswWD5IvKAJE12dsHT-1-jQ2fNPHn9snqv1mbb0GYGCs_2vSuMPWVUm5yJVxd4PEE7zQ42D3l8yLRT0dew35vpe3L0aQ?purpose=inline)
+
+- Rows represent actual digit classes.
+- Columns represent predicted digit classes.
+- Diagonal values represent correct predictions.
+- Values outside the diagonal represent incorrect predictions.
+
+For example, if the value at actual digit 5 and predicted digit 5 is 30, it means 30 images of digit 5 were correctly classified.
+
+## **3. Important Concepts**
+
+### **What is Random Forest?**
+
+Random Forest is an ensemble learning algorithm that combines multiple decision trees to improve prediction performance.
+
+### **What is Ensemble Learning?**
+
+Ensemble Learning combines multiple machine learning models to produce a better final prediction.
+
+### **What is a Decision Tree?**
+
+A Decision Tree is a supervised learning algorithm that makes decisions using a tree-like structure of conditions.
+
+### **What is a Confusion Matrix?**
+
+A confusion matrix is a table used to evaluate a classification model by comparing actual and predicted values.
+
+### **Confusion Matrix Terms**
+
+| Term                | Meaning                              |
+| ------------------- | ------------------------------------ |
+| True Positive (TP)  | Correctly predicted positive class   |
+| True Negative (TN)  | Correctly predicted negative class   |
+| False Positive (FP) | Incorrectly predicted positive class |
+| False Negative (FN) | Incorrectly predicted negative class |
+
+For multiclass classification, these values are calculated for each class using a one-versus-rest interpretation.
+
+## **4. Important Viva Questions and Answers**
+
+**1. What is Random Forest?**
+
+Random Forest is a supervised machine learning algorithm that combines multiple decision trees to make predictions.
+
+**2. What is the aim of this practical?**
+
+To classify handwritten digit images from 0 to 9 using the Random Forest algorithm.
+
+**3. Which dataset is used?**
+
+The built-in handwritten digits dataset from Scikit-learn.
+
+**4. How many images are present in the dataset?**
+
+1797 handwritten digit images.
+
+**5. What is the size of each image?**
+
+8 × 8 pixels.
+
+**6. How many features are present in each image?**
+
+64 features, because each image contains 64 pixels.
+
+**7. How many classes are present?**
+
+10 classes, representing digits from 0 to 9.
+
+**8. What is Ensemble Learning?**
+
+Ensemble Learning combines multiple machine learning models to improve prediction performance.
+
+**9. What is a Decision Tree?**
+
+A Decision Tree is a machine learning algorithm that makes decisions using a tree-like structure.
+
+**10. What is n_estimators=20?**
+
+It means the Random Forest model uses 20 decision trees.
+
+**11. What is majority voting?**
+
+Majority voting selects the class predicted by the highest number of decision trees.
+
+**12. What is train_test_split?**
+
+It divides the dataset into training and testing parts.
+
+**13. What is the purpose of random_state=42?**
+
+It ensures reproducible results.
+
+**14. What is accuracy?**
+
+Accuracy measures the percentage of correctly predicted samples.
+
+**15. What is a confusion matrix?**
+
+A confusion matrix is a table that compares actual and predicted classes.
+
+**16. What does the diagonal of a confusion matrix represent?**
+
+It represents correctly classified samples.
+
+**17. What does fmt='d' mean?**
+
+It displays heatmap values as integers.
+
+**18. What is the difference between Random Forest and Decision Tree?**
+
+A Decision Tree uses a single tree, whereas Random Forest combines multiple decision trees.
+
+**19. Is Random Forest supervised or unsupervised?**
+
+Random Forest is a supervised learning algorithm.
+
+**20. What are the advantages of Random Forest?**
+
+- Provides good classification performance.
+- Reduces overfitting compared with a single decision tree in many cases.
+- Handles complex datasets.
+- Combines multiple decision trees.
+
+## **5. Important Points to Remember for Practical Exam**
+
+| Topic                  | Answer                        |
+| ---------------------- | ----------------------------- |
+| Problem type           | Classification                |
+| Learning type          | Supervised Learning           |
+| Algorithm              | Random Forest                 |
+| Dataset                | Handwritten Digits            |
+| Total images           | 1797                          |
+| Image size             | 8 × 8                         |
+| Features               | 64                            |
+| Number of classes      | 10                            |
+| Number of trees        | 20                            |
+| Training/testing split | 80% / 20%                     |
+| Evaluation             | Accuracy and Confusion Matrix |
+
+## **6. Conclusion**
+
+In this practical, we implemented the Random Forest Classification algorithm to recognize handwritten digits from 0 to 9. We trained the model using 20 decision trees and predicted the digit classes for testing data. Finally, we evaluated the model using accuracy and a confusion matrix.
+
+**Remember for viva:** Random Forest is an ensemble learning algorithm that combines multiple decision trees and uses majority voting to make the final classification.

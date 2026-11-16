@@ -1,0 +1,649 @@
+# ==========================================================
+# 1. IMPORT LIBRARIES
+# ==========================================================
+
+import pandas as pd
+import numpy as np
+
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+
+
+# ==========================================================
+# 2. LOAD DATASET
+# ==========================================================
+
+df = pd.read_csv("Telco-Customer-Churn.csv")
+
+print("Dataset Loaded Successfully!")
+
+print("\nFirst 5 Records")
+print(df.head())
+
+print("\nDataset Shape")
+print(df.shape)
+
+print("\nColumn Names")
+print(df.columns.tolist())
+
+print("\nDataset Information")
+df.info()
+
+print("\nMissing Values")
+print(df.isnull().sum())
+
+
+# ==========================================================
+# 3. DATA CLEANING
+# ==========================================================
+
+# Convert TotalCharges into numeric
+df["TotalCharges"] = pd.to_numeric(
+    df["TotalCharges"],
+    errors="coerce"
+)
+
+# Remove extra spaces from categorical columns
+for col in df.select_dtypes(include="object").columns:
+
+    df[col] = df[col].astype(str).str.strip()
+
+# Handle missing numeric values using median
+for col in df.select_dtypes(include=np.number).columns:
+
+    df[col] = df[col].fillna(df[col].median())
+
+# Handle missing categorical values using mode
+for col in df.select_dtypes(include="object").columns:
+
+    df[col] = df[col].fillna(df[col].mode()[0])
+
+print("\nMissing Values After Cleaning")
+print(df.isnull().sum())
+
+
+# ==========================================================
+# 4. REMOVE DUPLICATES
+# ==========================================================
+
+print("\nDuplicate Records")
+print(df.duplicated().sum())
+
+df.drop_duplicates(inplace=True)
+
+print("\nShape After Removing Duplicates")
+print(df.shape)
+
+
+# ==========================================================
+# 5. TARGET VARIABLE ENCODING
+# ==========================================================
+
+df["Churn"] = df["Churn"].replace({
+    "Yes": 1,
+    "No": 0
+})
+
+df["Churn"] = pd.to_numeric(
+    df["Churn"],
+    errors="coerce"
+)
+
+df.dropna(subset=["Churn"], inplace=True)
+
+
+# ==========================================================
+# 6. FEATURE ENGINEERING
+# ==========================================================
+
+# Average monthly spending
+df["AvgMonthlySpend"] = (
+    df["TotalCharges"] / (df["tenure"] + 1)
+)
+
+# Long-term customer identification
+df["LongTermCustomer"] = np.where(
+    df["tenure"] >= 24,
+    1,
+    0
+)
+
+print("\nFeature Engineering Completed")
+
+print(df[[
+    "tenure",
+    "TotalCharges",
+    "AvgMonthlySpend",
+    "LongTermCustomer"
+]].head())
+
+
+# ==========================================================
+# 7. OUTLIER DETECTION AND HANDLING
+# ==========================================================
+
+numeric_cols = [
+    "tenure",
+    "MonthlyCharges",
+    "TotalCharges"
+]
+
+for col in numeric_cols:
+
+    Q1 = df[col].quantile(0.25)
+
+    Q3 = df[col].quantile(0.75)
+
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+
+    upper = Q3 + 1.5 * IQR
+
+    df[col] = df[col].clip(lower, upper)
+
+print("\nOutliers Handled")
+
+
+# ==========================================================
+# 8. DROP UNNECESSARY COLUMN
+# ==========================================================
+
+df.drop(
+    "customerID",
+    axis=1,
+    inplace=True
+)
+
+print("\nCustomer ID Removed")
+
+
+# ==========================================================
+# 9. CATEGORICAL ENCODING
+# ==========================================================
+
+categorical_cols = df.select_dtypes(
+    include="object"
+).columns
+
+for col in categorical_cols:
+
+    encoder = LabelEncoder()
+
+    df[col] = encoder.fit_transform(df[col])
+
+print("\nCategorical Encoding Completed")
+
+print(df.head())
+
+
+# ==========================================================
+# 10. FEATURE AND TARGET SEPARATION
+# ==========================================================
+
+X = df.drop(
+    "Churn",
+    axis=1
+)
+
+y = df["Churn"]
+
+print("\nFeatures Shape")
+print(X.shape)
+
+print("\nTarget Shape")
+print(y.shape)
+
+
+# ==========================================================
+# 11. TRAIN TEST SPLIT
+# ==========================================================
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.20,
+    random_state=42,
+    stratify=y
+)
+
+print("\nTraining and Testing Split Completed")
+
+
+# ==========================================================
+# 12. FEATURE SCALING
+# ==========================================================
+
+scale_cols = [
+    "tenure",
+    "MonthlyCharges",
+    "TotalCharges",
+    "AvgMonthlySpend"
+]
+
+scaler = StandardScaler()
+
+# Fit and transform training data
+X_train[scale_cols] = scaler.fit_transform(
+    X_train[scale_cols]
+)
+
+# Transform testing data
+X_test[scale_cols] = scaler.transform(
+    X_test[scale_cols]
+)
+
+print("\nScaling Completed")
+
+
+# ==========================================================
+# 13. DISPLAY TRAINING AND TESTING DATA
+# ==========================================================
+
+print("\nTraining Data Shape")
+print(X_train.shape)
+
+print("\nTesting Data Shape")
+print(X_test.shape)
+
+print("\nTraining Target Shape")
+print(y_train.shape)
+
+print("\nTesting Target Shape")
+print(y_test.shape)
+
+
+# ==========================================================
+# 14. SAVE CLEANED DATASET 
+# ==========================================================
+
+df.to_csv(
+    "Telecom_Customer_Churn_Cleaned.csv",
+    index=False
+)
+
+print("\nCleaned Dataset Saved Successfully!")
+
+
+
+
+
+
+
+# **Explanation of Data Cleaning and Preparation – Customer Churn**
+
+**Problem Statement:** Analyzing Customer Churn in a Telecommunications Company.
+
+**Objective:** To clean and prepare the telecom customer dataset by handling missing values, removing duplicates, correcting data types, handling outliers, creating new features, encoding categorical data, and scaling numerical data.
+
+Your code covers almost all the tasks given in the practical. Let's understand it step by step in simple language.
+
+## **1. Import libraries**
+
+```
+import pandas as pdimport numpy as npfrom sklearn.preprocessing import LabelEncoder, StandardScalerfrom sklearn.model_selection import train_test_split
+```
+
+- `pandas`: Used to load, manage, and analyze datasets.
+- `numpy`: Used for numerical operations.
+- `LabelEncoder`: Converts categorical values into numbers.
+- `StandardScaler`: Scales numerical data.
+- `train_test_split`: Divides data into training and testing sets.
+
+## **2. Load dataset**
+
+```
+df = pd.read_csv("Telco-Customer-Churn.csv")
+```
+
+- `read_csv()` loads the CSV file.
+- `df` is the DataFrame containing the dataset.
+
+Dataset exploration:
+
+```
+df.head()
+```
+
+Displays the first five records.
+
+```
+df.shape
+```
+
+Displays the number of rows and columns.
+
+```
+df.columns.tolist()
+```
+
+Displays all column names.
+
+```
+df.info()
+```
+
+Displays column names, data types, and non-null values.
+
+```
+df.isnull().sum()
+```
+
+Counts missing values in each column.
+
+## **3. Data cleaning**
+
+**Data cleaning** means correcting errors and handling missing or incorrect values in a dataset.
+
+### **Convert TotalCharges into numeric**
+
+```
+df["TotalCharges"] = pd.to_numeric(    df["TotalCharges"],    errors="coerce")
+```
+
+- Converts `TotalCharges` into a numeric data type.
+- `errors="coerce"` converts invalid values into `NaN`.
+
+### **Remove extra spaces**
+
+```
+for col in df.select_dtypes(include="object").columns:    df[col] = df[col].astype(str).str.strip()
+```
+
+- Selects categorical columns.
+- `astype(str)` converts values into strings.
+- `str.strip()` removes extra spaces from the beginning and end.
+
+### **Handle missing numeric values**
+
+```
+for col in df.select_dtypes(include=np.number).columns:    df[col] = df[col].fillna(df[col].median())
+```
+
+- Selects numerical columns.
+- `median()` calculates the middle value.
+- `fillna()` replaces missing values with the median.
+
+### **Handle missing categorical values**
+
+```
+for col in df.select_dtypes(include="object").columns:    df[col] = df[col].fillna(df[col].mode()[0])
+```
+
+- Selects categorical columns.
+- `mode()` finds the most frequently occurring value.
+- Missing values are replaced with the most common value.
+
+## **4. Remove duplicates**
+
+```
+df.duplicated().sum()
+```
+
+Counts duplicate records.
+
+```
+df.drop_duplicates(inplace=True)
+```
+
+Removes duplicate records.
+
+`inplace=True` means changes are applied directly to the original DataFrame.
+
+## **5. Target variable encoding**
+
+```
+df["Churn"] = df["Churn"].replace({    "Yes": 1,    "No": 0})
+```
+
+Converts the target column into numerical values:
+
+- Yes = 1 (Customer left the company)
+- No = 0 (Customer stayed with the company)
+
+```
+df["Churn"] = pd.to_numeric(df["Churn"], errors="coerce")df.dropna(subset=["Churn"], inplace=True)
+```
+
+Converts the column into numeric format and removes records where the target value is missing.
+
+## **6. Feature engineering**
+
+**Feature engineering** means creating new columns from existing columns to get useful information.
+
+### **Average monthly spending**
+
+```
+df["AvgMonthlySpend"] = (    df["TotalCharges"] / (df["tenure"] + 1))
+```
+
+Creates a new column called `AvgMonthlySpend`.
+
+It estimates the customer's average monthly spending using total charges and tenure.
+
+Note: The `+1` avoids division by zero, but this is an approximate feature rather than the exact monthly average.
+
+### **Long-term customer identification**
+
+```
+df["LongTermCustomer"] = np.where(    df["tenure"] >= 24,    1,    0)
+```
+
+Creates a new column:
+
+- Tenure 24 months or more = 1
+- Tenure less than 24 months = 0
+
+`np.where()` applies a condition and assigns values accordingly.
+
+## **7. Outlier detection and handling**
+
+**Outliers** are unusually high or low values compared with the rest of the data.
+
+Your code uses the IQR method.
+
+```
+Q1 = df[col].quantile(0.25)Q3 = df[col].quantile(0.75)IQR = Q3 - Q1lower = Q1 - 1.5 * IQRupper = Q3 + 1.5 * IQR
+```
+
+- `Q1`: First quartile (25th percentile).
+- `Q3`: Third quartile (75th percentile).
+- `IQR`: Difference between Q3 and Q1.
+- `lower`: Lower limit for detecting outliers.
+- `upper`: Upper limit for detecting outliers.
+
+```
+df[col] = df[col].clip(lower, upper)
+```
+
+Replaces values below the lower limit with the lower limit and values above the upper limit with the upper limit.
+
+This technique is called **capping**.
+
+## **8. Drop unnecessary column**
+
+```
+df.drop("customerID", axis=1, inplace=True)
+```
+
+Removes the `customerID` column because it is an identifier and generally does not provide useful predictive information.
+
+- `axis=1`: Refers to a column.
+- `inplace=True`: Updates the original DataFrame.
+
+## **9. Categorical encoding**
+
+```
+categorical_cols = df.select_dtypes(    include="object").columns
+```
+
+Selects all categorical columns.
+
+```
+for col in categorical_cols:    encoder = LabelEncoder()    df[col] = encoder.fit_transform(df[col])
+```
+
+Converts categorical values into numerical values.
+
+Example:
+
+| Gender | Encoded value |
+| ------ | ------------- |
+| Female | 0             |
+| Male   | 1             |
+
+The actual numerical assignments depend on the encoder's sorted classes.
+
+## **10. Feature and target separation**
+
+```
+X = df.drop("Churn", axis=1)y = df["Churn"]
+```
+
+Separates the dataset into two parts:
+
+- `X`: Independent variables (input features).
+- `y`: Dependent variable (target output).
+
+Here, the objective is to predict whether a customer will leave the company.
+
+## **11. Train-test split**
+
+```
+X_train, X_test, y_train, y_test = train_test_split(    X,    y,    test_size=0.20,    random_state=42,    stratify=y)
+```
+
+Divides the dataset into training and testing data.
+
+- 80% data is used for training.
+- 20% data is used for testing.
+- `random_state=42` ensures reproducible splitting.
+- `stratify=y` maintains the same approximate proportion of churn and non-churn customers in both sets.
+
+## **12. Feature scaling**
+
+**Feature scaling** brings numerical features to a similar scale.
+
+```
+scaler = StandardScaler()
+```
+
+Creates a StandardScaler object.
+
+```
+X_train[scale_cols] = scaler.fit_transform(    X_train[scale_cols])
+```
+
+Calculates the mean and standard deviation from training data and scales it.
+
+```
+X_test[scale_cols] = scaler.transform(    X_test[scale_cols])
+```
+
+Scales testing data using the same training-data values.
+
+StandardScaler uses:
+
+\\[ Z = \frac{X-\mu}{\sigma} \\]
+
+Where:
+
+- X = Original value
+- μ = Mean
+- σ = Standard deviation
+- Z = Scaled value
+
+## **13. Display training and testing data**
+
+```
+print(X_train.shape)print(X_test.shape)print(y_train.shape)print(y_test.shape)
+```
+
+Displays the dimensions of training and testing datasets.
+
+It helps verify that the dataset has been divided correctly.
+
+## **14. Save cleaned dataset**
+
+```
+df.to_csv(    "Telecom_Customer_Churn_Cleaned.csv",    index=False)
+```
+
+Saves the cleaned dataset into a new CSV file.
+
+`index=False` prevents Pandas from saving the row index as an extra column.
+
+## **Important practical questions and answers (Viva)**
+
+**1. What is data cleaning?**\
+Data cleaning is the process of identifying and correcting missing, incorrect, and duplicate data.
+
+**2. What is customer churn?**\
+Customer churn means customers stop using the services of a company.
+
+**3. What is Pandas?**\
+Pandas is a Python library used for data manipulation and analysis.
+
+**4. What is NumPy?**\
+NumPy is a Python library used for numerical and mathematical operations.
+
+**5. What is a missing value?**\
+A missing value is a data entry that is empty or unavailable.
+
+**6. What is median?**\
+Median is the middle value of a sorted dataset.
+
+**7. What is mode?**\
+Mode is the most frequently occurring value.
+
+**8. What is a duplicate record?**\
+A duplicate record is a row that appears more than once in a dataset.
+
+**9. What is Label Encoding?**\
+Label Encoding converts categorical values into numerical values.
+
+**10. What is feature engineering?**\
+Feature engineering is the process of creating new useful features from existing data.
+
+**11. What is an outlier?**\
+An outlier is a value that is unusually different from other values.
+
+**12. What is IQR?**\
+IQR stands for Interquartile Range. It is calculated as Q3 minus Q1.
+
+**13. What is StandardScaler?**\
+StandardScaler transforms numerical data so that it has approximately zero mean and unit standard deviation.
+
+**14. What is train-test splitting?**\
+It divides a dataset into training data and testing data.
+
+**15. What is the purpose of&#x20;**`random_state=42`**?**\
+It ensures that the same random split can be reproduced.
+
+**16. What is the purpose of&#x20;**`stratify=y`**?**\
+It maintains the target class distribution in training and testing datasets.
+
+**17. What is the target variable in this experiment?**\
+The target variable is `Churn`.
+
+**18. What does&#x20;**`axis=1`**&#x20;mean?**\
+It specifies a column operation.
+
+**19. What is the difference between&#x20;**`fit_transform()`**&#x20;and&#x20;**`transform()`**?**\
+`fit_transform()` learns scaling values and transforms data. `transform()` uses already learned values to transform data.
+
+**20. Why do we save the cleaned dataset?**\
+To reuse the prepared data for further analysis and machine learning.
+
+## **Important points to remember**
+
+1. This experiment is about data preprocessing, not training a machine learning model.
+2. The target column is `Churn`.
+3. The IQR method is used for outlier handling.
+4. LabelEncoder is used for categorical encoding.
+5. StandardScaler is used for feature scaling.
+6. The dataset is split into 80% training and 20% testing data.
+
+**Two improvements to keep in mind:** In a proper machine learning workflow, calculate imputation values, outlier limits, and categorical encoding mappings using training data only, to avoid data leakage. Also, the `AvgMonthlySpend` formula is an approximation; `MonthlyCharges` is already available in this dataset.
+
+**Short practical conclusion:** The telecom customer dataset was cleaned and prepared by handling missing values, removing duplicates, converting data types, handling outliers, creating new features, encoding categorical columns, and scaling numerical features. The prepared dataset was saved for further machine learning analysis.
